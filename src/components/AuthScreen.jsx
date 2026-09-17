@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ArrowRight, LockKeyhole, Mail, ShieldCheck, Zap } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import '../auth.css'
 
 export default function AuthScreen() {
   const [mode, setMode] = useState('signin')

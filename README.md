@@ -41,4 +41,8 @@ The current application is a connected cloud-backed engineering workspace with r
 
 For production deployment, Vercel builds from the GitHub main branch.
 
-The V0.2 storage hardening migration must be applied to the existing Supabase project before using the Files workspace in production.
+Production hardening is now documented in `docs/PRODUCTION_READINESS.md`. The database has been security/performance audited; Auth leaked-password protection remains a Supabase dashboard setting that must be enabled before treating the security audit as fully clean.
+
+## License
+
+MIT — see `LICENSE`.

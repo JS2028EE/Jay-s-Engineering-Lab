@@ -594,3 +594,21 @@ Added:
 - a release-aligned backup export version so exported data identifies the current application release
 
 The goal is to prevent the project from being secure and tested today but silently becoming stale later.
+
+
+## 31. Expanded Engineering Tools
+
+The Engineering Tools workspace was expanded from simple inference-based utilities into explicit, method-driven calculators.
+
+Added:
+
+- core Ohm's Law + Power target selection for voltage, current, resistance, or power
+- selectable two-value solution methods for the selected core quantity
+- inductor calculations for inductance, voltage, current slope, stored energy, inductive reactance, and frequency
+- capacitor calculations for capacitance, voltage, charge, stored energy, capacitive reactance, frequency, current, and voltage slope
+- Frequency ↔ Period utility
+- dimension-safe unit conversion for frequency, time, inductance, capacitance, charge, energy, and expanded SI scales for common voltage/current/resistance/power units
+
+Engineering calculation tests were expanded with floating-point-aware assertions and missing-input edge coverage.
+
+The UI now makes the requested quantity explicit before any calculation occurs, reducing ambiguity during circuit analysis and study work.

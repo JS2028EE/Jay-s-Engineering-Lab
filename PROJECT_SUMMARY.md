@@ -876,3 +876,37 @@ The final concept is:
 # Repository Status
 
 This repository is the starting point for the project. The initial goal is to establish the project documentation and architecture before building the application itself.
+
+
+---
+
+# Current Implementation Status
+
+As of September 18, 2026, the repository has moved beyond a visual-only prototype. The following pages have Supabase-backed workflows:
+
+- Dashboard
+- Curriculum
+- Projects
+- Notes
+- Tests
+- Circuits
+- Components
+- Mistakes
+- Analytics
+- Wellness
+
+Dashboard and Analytics metrics are derived from stored records. Curriculum progress is based on lesson requirements, Core Load is based on incomplete requirements, test averages are calculated from scored tests, study hours come from study sessions, project progress comes from tasks, and mistake-resolution data comes from mistake records.
+
+## Documentation
+
+The project history and architecture are maintained in:
+
+- `docs/BUILD_HISTORY.md` — development struggles, bugs, fixes, deployment issues, and lessons learned
+- `docs/ARCHITECTURE.md` — application architecture, data model, calculation rules, and security principles
+- `docs/ROADMAP.md` — remaining work, planned integrations, advanced engineering tools, and long-term direction
+
+## Current engineering rule
+
+A feature is not considered complete because a button exists.
+
+A feature is complete when its record can be created, loaded after refresh, edited, deleted safely, related to other records where appropriate, and reflected in the correct calculated statistics.

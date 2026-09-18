@@ -2,7 +2,7 @@
 
 This roadmap separates what is working now from what still needs to be built.
 
-## CURRENT — Functional foundation
+## CURRENT — V0.2 connected foundation
 
 ### Working workspaces
 
@@ -16,6 +16,10 @@ This roadmap separates what is working now from what still needs to be built.
 - Mistakes
 - Analytics
 - Wellness
+- Study Sessions
+- Connections / Knowledge Graph
+- Files
+- Settings / Data Export
 
 ### Working data principles
 
@@ -31,6 +35,8 @@ This roadmap separates what is working now from what still needs to be built.
 - Inventory quantity totals
 
 ## PHASE 1 — Finish CRUD quality
+
+A significant part of this phase is now implemented: Notes, Tests, Circuits, Components, Projects, Mistakes, Curriculum, and Wellness support real editing and richer relationships. The remaining work is to deepen editing, add attachments, question-to-mistake workflows, and bulk operations.
 
 The current modules need full lifecycle support, not only create/delete.
 

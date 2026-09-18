@@ -122,3 +122,16 @@ The current V0.3 foundation is suitable for normal personal use when:
 - the remaining Auth advisor warning is understood
 
 This document intentionally does not promise that third-party services or dependency versions will remain unchanged for a full year. It defines the maintenance needed to keep the current system healthy as those external systems evolve.
+
+
+## Dependency maintenance
+
+Dependency maintenance is now partially automated through GitHub Dependabot.
+
+Dependabot is configured to review npm dependencies and GitHub Actions weekly with a small pull-request limit. CI also runs a high-severity npm audit on the repository quality gate.
+
+Dependency updates should still be reviewed for application compatibility before release.
+
+## Release metadata
+
+Data exports include the current application release version so backups can be traced to the software version that produced them.

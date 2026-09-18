@@ -10,6 +10,8 @@ import TestsPage from './pages/TestsPage'
 import CircuitsPage from './pages/CircuitsPage'
 import ComponentsPage from './pages/ComponentsPage'
 import MistakesPage from './pages/MistakesPage'
+import AnalyticsPage from './pages/AnalyticsPage'
+import WellnessPage from './pages/WellnessPage'
 import { supabase, supabaseConfigured } from './lib/supabase'
 import { getDashboardData } from './lib/data'
 
@@ -111,7 +113,7 @@ function AppShell({ user }) {
     <main className="main">
       <header className="topbar"><button className="icon-btn menu-btn" onClick={() => setOpen(true)}><Menu size={20}/></button><div className="crumb"><span>ENGINEERING LAB</span><b>/</b><strong>{pageTitle.toUpperCase()}</strong></div><div className="top-actions"><span className="user-chip"><UserRound size={14}/>{user.email}</span><span className="clock mono">{status}</span><button className="icon-btn signout-btn" onClick={signOut} title="Sign out"><LogOut size={16}/></button><button className="quick-btn" onClick={() => setQuick(!quick)}><Plus size={17}/> QUICK ACTION</button></div></header>
       {quick && <div className="quick-panel">{quickItems.map(([href, label]) => <NavLink key={href} to={href} onClick={() => setQuick(false)}>{label}</NavLink>)}</div>}
-      {path === '/' ? <DashboardPage /> : path === '/curriculum' ? <CurriculumPage /> : path === '/projects' ? <ProjectsPage /> : path === '/notes' ? <NotesPage /> : path === '/tests' ? <TestsPage /> : path === '/circuits' ? <CircuitsPage /> : path === '/components' ? <ComponentsPage /> : path === '/mistakes' ? <MistakesPage /> : <ModulePage title={pageTitle} Icon={Icon} description={module?.[1] ?? 'Engineering command center.'} />}
+      {path === '/' ? <DashboardPage /> : path === '/curriculum' ? <CurriculumPage /> : path === '/projects' ? <ProjectsPage /> : path === '/notes' ? <NotesPage /> : path === '/tests' ? <TestsPage /> : path === '/circuits' ? <CircuitsPage /> : path === '/components' ? <ComponentsPage /> : path === '/mistakes' ? <MistakesPage /> : path === '/analytics' ? <AnalyticsPage /> : path === '/wellness' ? <WellnessPage /> : <ModulePage title={pageTitle} Icon={Icon} description={module?.[1] ?? 'Engineering command center.'} />}
     </main>
   </div>
 }

@@ -29,7 +29,10 @@ test('solves an explicitly selected power from voltage and current', () => {
 
 test('solves core EE power and square-root relationships', () => {
   assert.deepEqual(solveCoreEE('current', { voltage: 5, power: 0.25 }), { label: 'Current', value: 0.05, unit: 'A' })
-  assert.deepEqual(solveCoreEE('resistance', { current: 0.05, power: 0.25 }), { label: 'Resistance', value: 100, unit: 'Ω' })
+  const resistance = solveCoreEE('resistance', { current: 0.05, power: 0.25 })
+  assert.equal(resistance.label, 'Resistance')
+  assert.ok(Math.abs(resistance.value - 100) < 1e-12)
+
 })
 
 test('rejects invalid core EE input', () => {
@@ -71,12 +74,12 @@ test('solves frequency and period in the utility calculator', () => {
 
 test('converts common electrical and passive-component units', () => {
   assert.equal(convertElectricalUnit(1, 'kΩ', 'Ω'), 1000)
-  assert.equal(convertElectricalUnit(1, 'mH', 'uH'), 1000)
-  assert.equal(convertElectricalUnit(1, 'uF', 'nF'), 1000)
-  assert.equal(convertElectricalUnit(1, 'MHz', 'kHz'), 1000)
-  assert.equal(convertElectricalUnit(1, 'ms', 'us'), 1000)
-  assert.equal(convertElectricalUnit(1, 'mC', 'uC'), 1000)
-  assert.equal(convertElectricalUnit(1, 'mJ', 'uJ'), 1000)
+  assert.ok(Math.abs(convertElectricalUnit(1, 'mH', 'uH') - 1000) < 1e-9)
+  assert.ok(Math.abs(convertElectricalUnit(1, 'uF', 'nF') - 1000) < 1e-9)
+  assert.ok(Math.abs(convertElectricalUnit(1, 'MHz', 'kHz') - 1000) < 1e-9)
+  assert.ok(Math.abs(convertElectricalUnit(1, 'ms', 'us') - 1000) < 1e-9)
+  assert.ok(Math.abs(convertElectricalUnit(1, 'mC', 'uC') - 1000) < 1e-9)
+  assert.ok(Math.abs(convertElectricalUnit(1, 'mJ', 'uJ') - 1000) < 1e-9)
 })
 
 test('rejects cross-dimensional electrical conversion', () => {

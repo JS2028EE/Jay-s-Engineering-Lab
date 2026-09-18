@@ -435,3 +435,28 @@ A dedicated `docs/MAINTENANCE.md` document now records:
 - the practical readiness definition
 
 This prevents operational knowledge from living only in conversation history.
+
+
+## 25. Form-control visibility fix
+
+### Problem
+
+Native browser controls were inheriting the Lab's bright text on default light control backgrounds. This made icon-only add/delete actions and native selectors difficult or impossible to read until the pointer hovered over them.
+
+### Fix
+
+The shared stylesheet now provides:
+
+- a dark, visible base style for `icon-btn`
+- a clear hover state for normal and destructive actions
+- dark native `select` controls with light text
+- dark `option` backgrounds for dropdown lists
+- dark color-scheme hints for number inputs
+- visible keyboard focus outlines
+- a consistent disabled state
+
+This applies across the application, including Engineering Tools resistor band selectors and the CRUD action controls used throughout the workspaces.
+
+### Result
+
+Create/add, edit, delete, number-entry, and color-selection controls remain readable without requiring hover.

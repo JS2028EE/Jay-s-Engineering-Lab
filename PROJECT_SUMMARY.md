@@ -1,5 +1,8 @@
 # Jay's Engineering Lab
 
+> **Current-state note — 2026-09-18:** This document preserves the broader project history and original vision. For the exact current implementation status, use `README.md`, `docs/ROADMAP.md`, `docs/VERIFICATION.md`, and `docs/MAINTENANCE.md`.
+
+
 ## Project Overview
 
 **Jay's Engineering Lab** is a personal, futuristic Electrical Engineering operating system and command center. It is designed to connect the user's physical engineering lab with a digital engineering environment where learning, projects, components, mistakes, tests, notes, circuits, analytics, and personal development can be tracked over time.

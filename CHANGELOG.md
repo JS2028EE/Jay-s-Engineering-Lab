@@ -2,6 +2,24 @@
 
 All notable changes to Jay's Engineering Lab are documented here.
 
+## 0.3.1 — 2026-09-18
+
+### Added
+- Deterministic engineering math library separated from UI code.
+- Automated Node tests for Ohm's Law, power relationships, resistor decoding, electrical unit conversion, and value formatting.
+- CI quality gate now runs automated tests, the production build, and a high-severity dependency audit.
+
+### Improved
+- Ohm's Law + Power now requires exactly two supplied values and handles zero/divide-by-zero cases explicitly.
+- 4-band resistor decoder now includes the fourth-band tolerance and rejects an invalid leading black digit.
+- Electrical unit converter now groups dimensions and blocks invalid cross-dimensional conversions such as volts-to-amps.
+- New account creation now requires at least 8 characters while existing account sign-in remains compatible with existing passwords.
+- Engineering calculations are now independently testable instead of being embedded only inside the React view.
+
+### Reliability
+- Near-final core release gate now includes automated deterministic tests in addition to the production build.
+- Dependency security scanning is now part of CI.
+
 ## 0.3.0 — 2026-09-18
 
 ### Added

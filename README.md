@@ -33,6 +33,7 @@ The dashboard, curriculum, projects, notes, tests, circuits, components, mistake
 - [Architecture](docs/ARCHITECTURE.md)
 - [Build History](docs/BUILD_HISTORY.md)
 - [Roadmap](docs/ROADMAP.md)
+- [User Guide](docs/USER_GUIDE.md)
 - [V0.2 Supabase hardening migration](supabase/migrations/002_system_hardening_storage.sql)
 
 ## V0.2

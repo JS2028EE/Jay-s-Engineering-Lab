@@ -50,6 +50,7 @@ export default function CurriculumPage() {
   const [subjects, setSubjects] = useState([])
   const [expanded, setExpanded] = useState({})
   const [form, setForm] = useState(emptyForm)
+  const [creating, setCreating] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -70,11 +71,13 @@ export default function CurriculumPage() {
 
   function start(type, parentId) {
     setForm({ type: type, parentId: parentId || '', name: '', description: '' })
+    setCreating(true)
     setError('')
   }
 
   function cancel() {
     setForm(emptyForm)
+    setCreating(false)
   }
 
   async function createRecord(event) {
@@ -160,7 +163,7 @@ export default function CurriculumPage() {
         </div>
       </section>
 
-      {(form.name || form.type !== 'subject') && (
+      {creating && (
         <form className="panel record-form" onSubmit={createRecord}>
           <div className="record-form-head">
             <div><p className="eyebrow">CREATE RECORD</p><h2>{form.type === 'subject' ? 'New Subject' : form.type === 'unit' ? 'New Unit' : form.type === 'lesson' ? 'New Lesson' : 'New Lesson Requirement'}</h2></div>

@@ -92,7 +92,7 @@ const CAPACITOR_METHODS = {
   ],
 }
 
-function TargetCalculator({ eyebrow, title, icon, description, targets, methods, solver, defaultTarget }) {
+function TargetCalculator({ eyebrow, title, icon, description, targets, methods, solver, defaultTarget, wide = false }) {
   const [target, setTarget] = useState(defaultTarget)
   const [method, setMethod] = useState(methods[defaultTarget][0].value)
   const [inputs, setInputs] = useState({})
@@ -112,7 +112,7 @@ function TargetCalculator({ eyebrow, title, icon, description, targets, methods,
   const values = Object.fromEntries(currentMethod.fields.map(([key]) => [key, inputs[key] ?? '']))
   const result = useMemo(() => solver(target, values), [solver, target, values.current, values.resistance, values.voltage, values.power, values.inductance, values.rate, values.energy, values.reactance, values.frequency, values.current, values.capacitance, values.charge])
 
-  return <section className="panel tool-card tool-card-wide">
+  return <section className={`panel tool-card${wide ? ' tool-card-wide' : ''}`}>
     <div className="tool-head"><div className="module-icon">{icon}</div><div><p className="eyebrow">{eyebrow}</p><h2>{title}</h2></div><button className="icon-btn" title="Clear calculator" onClick={() => setInputs({})}><RefreshCw size={15}/></button></div>
     <p className="tool-description">{description}</p>
     <div className="tool-selector-row">
@@ -142,6 +142,7 @@ function CoreEE() {
     methods={CORE_METHODS}
     solver={solveCoreEE}
     defaultTarget="resistance"
+    wide
   />
 }
 

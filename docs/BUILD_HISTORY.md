@@ -358,3 +358,31 @@ Analytics
 Study Sessions provide a time dimension across learning activity.
 
 Wellness remains an intentionally separate subsystem.
+
+
+## 21. V0.3 production-readiness pass
+
+The V0.3 pass focused on making the Lab comfortable to use rather than only increasing the number of pages.
+
+Implemented:
+
+- MIT License
+- Production readiness audit
+- Supabase security/performance advisor review
+- SECURITY DEFINER execution hardening
+- Trigger search-path hardening
+- foreign-key performance indexes
+- automated GitHub Actions build verification
+- Node 22 development baseline
+- version bumped to V0.3.0
+- in-app Engineering Tools
+- in-app Lab Guide
+- live header clock
+- editable test questions
+- question-level score recalculation
+- question-to-mistake workflow
+- dedicated user guide documentation
+
+The production database was verified after the hardening statements were applied. The remaining Supabase security advisor item is Auth leaked-password protection, which is configured from the Supabase Auth dashboard.
+
+The exact production deployment must still be checked after the V0.3 commits settle.

@@ -232,11 +232,13 @@ export function solveFrequencyPeriod(target, values) {
     Object.entries(values).map(([key, value]) => [key, parseOptionalNumber(value)]),
   )
   if (!['frequency', 'period'].includes(target)) return null
-  if (target === 'frequency' && parsed.period !== null && parsed.period > 0 && parsed.frequency === null) {
-    return { label: 'Frequency', value: 1 / parsed.period, unit: 'Hz' }
+  const period = parsed.period ?? null
+  const frequency = parsed.frequency ?? null
+  if (target === 'frequency' && period !== null && period > 0 && frequency === null) {
+    return { label: 'Frequency', value: 1 / period, unit: 'Hz' }
   }
-  if (target === 'period' && parsed.frequency !== null && parsed.frequency > 0 && parsed.period === null) {
-    return { label: 'Period', value: 1 / parsed.frequency, unit: 's' }
+  if (target === 'period' && frequency !== null && frequency > 0 && period === null) {
+    return { label: 'Period', value: 1 / frequency, unit: 's' }
   }
   return null
 }

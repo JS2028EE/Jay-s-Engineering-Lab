@@ -128,7 +128,7 @@ function AppShell({ user }) {
     <aside className={'sidebar ' + (open ? 'sidebar-open' : '')}>
       <div className="brand"><div className="brand-mark"><Zap size={22} /></div><div><strong>JAY'S</strong><span>ENGINEERING LAB</span></div><button className="icon-btn mobile-close" onClick={() => setOpen(false)}><X size={18}/></button></div>
       <div className="system-status"><span className="status-dot"/> SYSTEM ONLINE <span className="mono">V0.3</span></div>
-      <nav>{nav.map(([href, label, NIcon]) => <NavLink key={href} to={href} end={href === '/'} onClick={() => setOpen(false)} className={({isActive}) => 'nav-item ' + (isActive ? 'active' : '')}><NIcon size={17}/><span>{label}</span>{href === '/' && <span className="nav-live"/>}</NavLink>)}</nav>
+      <nav aria-label="Primary navigation">{nav.map(([href, label, NIcon]) => <NavLink key={href} to={href} end={href === '/'} onClick={() => setOpen(false)} className={({isActive}) => 'nav-item ' + (isActive ? 'active' : '')}><NIcon size={17}/><span>{label}</span>{href === '/' && <span className="nav-live"/>}</NavLink>)}</nav>
       <div className="sidebar-bottom">
         <div className="mini-readout" title="Core Load = incomplete curriculum requirements ÷ total curriculum requirements">
           <span>CORE LOAD</span><b>{coreLoad}%</b><div className="meter"><i style={{ width: coreLoad + '%' }}/></div>

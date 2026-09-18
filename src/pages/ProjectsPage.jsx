@@ -32,18 +32,20 @@ export default function ProjectsPage(){
 
   async function refresh(){
     setLoading(true);setError('')
-    const [projectResult,componentResult]=await Promise.all([
-      loadProjects(),
-      supabase.from('components').select('id,name,value,type,quantity').order('name')
-    ])
-    if(componentResult.error)setError(componentResult.error.message)
-    else setComponents(componentResult.data||[])
     try{
-      const data=projectResult
-      data.forEach(p=>{p.project_tasks=(p.project_tasks||[]).sort((a,b)=>a.sort_order-b.sort_order)})
-      setProjects(data)
-    }catch(err){setError(err.message||'Could not load projects.')}
-    setLoading(false)
+      const [projectData,componentResult]=await Promise.all([
+        loadProjects(),
+        supabase.from('components').select('id,name,value,type,quantity').order('name')
+      ])
+      if(componentResult.error) throw componentResult.error
+      projectData.forEach(p=>{p.project_tasks=(p.project_tasks||[]).sort((a,b)=>a.sort_order-b.sort_order)})
+      setProjects(projectData)
+      setComponents(componentResult.data||[])
+    }catch(err){
+      setError(err.message||'Could not load projects.')
+    }finally{
+      setLoading(false)
+    }
   }
   useEffect(()=>{refresh()},[])
 

@@ -2,6 +2,22 @@
 
 All notable changes to Jay's Engineering Lab are documented here.
 
+## 0.3.2 — Engineering Tools expansion
+
+### Added
+- Explicit target selection for the core Ohm's Law + Power calculator.
+- Multiple selectable solution methods for voltage, current, resistance, and power.
+- Inductor calculator covering inductance, voltage, current slope, stored energy, inductive reactance, and frequency.
+- Capacitor calculator covering capacitance, voltage, charge, stored energy, capacitive reactance, frequency, current, and voltage slope.
+- Frequency ↔ period utility.
+- Electrical unit conversion groups for frequency, time, inductance, capacitance, charge, and energy.
+
+### Improved
+- Engineering Tools no longer infers the desired core quantity from whichever two fields happen to be filled.
+- Calculator inputs now show the exact quantity and units required by the selected method.
+- Engineering math coverage expanded with deterministic tests for the new calculators and unit groups.
+
+
 ## 0.3.1 — 2026-09-18
 
 ### Added

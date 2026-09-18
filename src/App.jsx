@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { Activity, Boxes, CircuitBoard, GitBranch, GraduationCap, LayoutDashboard, Menu, NotebookPen, Plus, Settings, ShieldAlert, Sparkles, TestTube2, X, Zap, LogOut, UserRound } from 'lucide-react'
+import { Activity, BookOpen, Boxes, CircuitBoard, GitBranch, GraduationCap, LayoutDashboard, Menu, NotebookPen, Paperclip, Plus, Settings, ShieldAlert, Sparkles, TestTube2, X, Zap, LogOut, UserRound } from 'lucide-react'
 import AuthScreen from './components/AuthScreen'
 import DashboardPage from './pages/DashboardPage'
 import CurriculumPage from './pages/CurriculumPage'
@@ -12,6 +12,10 @@ import ComponentsPage from './pages/ComponentsPage'
 import MistakesPage from './pages/MistakesPage'
 import AnalyticsPage from './pages/AnalyticsPage'
 import WellnessPage from './pages/WellnessPage'
+import StudySessionsPage from './pages/StudySessionsPage'
+import ConnectionsPage from './pages/ConnectionsPage'
+import FilesPage from './pages/FilesPage'
+import SettingsPage from './pages/SettingsPage'
 import { supabase, supabaseConfigured } from './lib/supabase'
 import { getDashboardData } from './lib/data'
 
@@ -26,6 +30,9 @@ const nav = [
   ['/mistakes', 'Mistakes', ShieldAlert],
   ['/analytics', 'Analytics', Activity],
   ['/wellness', 'Wellness', Sparkles],
+  ['/study-sessions', 'Study Sessions', BookOpen],
+  ['/connections', 'Connections', GitBranch],
+  ['/files', 'Files', Paperclip],
 ]
 
 const modules = {
@@ -38,6 +45,10 @@ const modules = {
   '/mistakes': ['Mistakes', 'Find patterns in what went wrong.', ShieldAlert],
   '/analytics': ['Analytics', 'See how your engineering knowledge grows.', Activity],
   '/wellness': ['Wellness', 'Track habits that support the engineer behind the work.', Sparkles],
+  '/study-sessions': ['Study Sessions', 'Record real study time and learning activity.', BookOpen],
+  '/connections': ['Connections', 'Build the engineering knowledge graph.', GitBranch],
+  '/files': ['Files', 'Store private engineering artifacts.', Paperclip],
+  '/settings': ['Settings', 'Protect, export, and manage your Lab system.', Settings],
 }
 
 function ConfigNotice() {
@@ -95,6 +106,8 @@ function AppShell({ user }) {
     ['/mistakes', '+ Mistake'],
     ['/components', '+ Component'],
     ['/projects', '+ Project'],
+    ['/study-sessions', '+ Study Session'],
+    ['/files', '+ File'],
   ]
 
   return <div className="app-shell">
@@ -107,13 +120,13 @@ function AppShell({ user }) {
         <div className="mini-readout" title="Core Load = incomplete curriculum requirements ÷ total curriculum requirements">
           <span>CORE LOAD</span><b>{coreLoad}%</b><div className="meter"><i style={{ width: coreLoad + '%' }}/></div>
         </div>
-        <button className="nav-item"><Settings size={17}/><span>System Settings</span></button>
+        <NavLink className={({isActive}) => 'nav-item ' + (isActive ? 'active' : '')} to="/settings"><Settings size={17}/><span>System Settings</span></NavLink>
       </div>
     </aside>
     <main className="main">
       <header className="topbar"><button className="icon-btn menu-btn" onClick={() => setOpen(true)}><Menu size={20}/></button><div className="crumb"><span>ENGINEERING LAB</span><b>/</b><strong>{pageTitle.toUpperCase()}</strong></div><div className="top-actions"><span className="user-chip"><UserRound size={14}/>{user.email}</span><span className="clock mono">{status}</span><button className="icon-btn signout-btn" onClick={signOut} title="Sign out"><LogOut size={16}/></button><button className="quick-btn" onClick={() => setQuick(!quick)}><Plus size={17}/> QUICK ACTION</button></div></header>
       {quick && <div className="quick-panel">{quickItems.map(([href, label]) => <NavLink key={href} to={href} onClick={() => setQuick(false)}>{label}</NavLink>)}</div>}
-      {path === '/' ? <DashboardPage /> : path === '/curriculum' ? <CurriculumPage /> : path === '/projects' ? <ProjectsPage /> : path === '/notes' ? <NotesPage /> : path === '/tests' ? <TestsPage /> : path === '/circuits' ? <CircuitsPage /> : path === '/components' ? <ComponentsPage /> : path === '/mistakes' ? <MistakesPage /> : path === '/analytics' ? <AnalyticsPage /> : path === '/wellness' ? <WellnessPage /> : <ModulePage title={pageTitle} Icon={Icon} description={module?.[1] ?? 'Engineering command center.'} />}
+      {path === '/' ? <DashboardPage /> : path === '/curriculum' ? <CurriculumPage /> : path === '/projects' ? <ProjectsPage /> : path === '/notes' ? <NotesPage /> : path === '/tests' ? <TestsPage /> : path === '/circuits' ? <CircuitsPage /> : path === '/components' ? <ComponentsPage /> : path === '/mistakes' ? <MistakesPage /> : path === '/analytics' ? <AnalyticsPage /> : path === '/wellness' ? <WellnessPage /> : path === '/study-sessions' ? <StudySessionsPage /> : path === '/connections' ? <ConnectionsPage /> : path === '/files' ? <FilesPage /> : path === '/settings' ? <SettingsPage /> : <ModulePage title={pageTitle} Icon={Icon} description={module?.[1] ?? 'Engineering command center.'} />}
     </main>
   </div>
 }

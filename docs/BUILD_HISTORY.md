@@ -580,3 +580,17 @@ New-account creation now requests a minimum eight-character password in the clie
 ### Release position
 
 V0.3.1 is treated as the near-final core personal release line. Advanced features such as rich Notes, inventory transaction history, full restore/import, interactive circuit simulation, and comprehensive browser E2E testing remain intentionally deferred expansions rather than unfinished core architecture.
+
+
+## 30. Near-final maintenance automation
+
+The repository now has an explicit software-maintenance layer in addition to runtime security.
+
+Added:
+
+- weekly Dependabot updates for npm dependencies
+- weekly Dependabot updates for GitHub Actions
+- high-severity dependency audit in CI
+- a release-aligned backup export version so exported data identifies the current application release
+
+The goal is to prevent the project from being secure and tested today but silently becoming stale later.

@@ -4,6 +4,7 @@ import { Activity, BookOpen, Boxes, CircuitBoard, Gauge, GitBranch, GraduationCa
 import AuthScreen from './components/AuthScreen'
 import DashboardPage from './pages/DashboardPage'
 import CurriculumPage from './pages/CurriculumPage'
+import ProjectsPage from './pages/ProjectsPage'
 import { supabase, supabaseConfigured } from './lib/supabase'
 
 const nav = [
@@ -79,7 +80,7 @@ function AppShell({ user }) {
     <main className="main">
       <header className="topbar"><button className="icon-btn menu-btn" onClick={() => setOpen(true)}><Menu size={20}/></button><div className="crumb"><span>ENGINEERING LAB</span><b>/</b><strong>{pageTitle.toUpperCase()}</strong></div><div className="top-actions"><span className="user-chip"><UserRound size={14}/>{user.email}</span><span className="clock mono">{status}</span><button className="icon-btn signout-btn" onClick={signOut} title="Sign out"><LogOut size={16}/></button><button className="quick-btn" onClick={() => setQuick(!quick)}><Plus size={17}/> QUICK ACTION</button></div></header>
       {quick && <div className="quick-panel"><button>+ Note</button><button>+ Test</button><button>+ Circuit</button><button>+ Mistake</button><button>+ Component</button><button>+ Project</button></div>}
-      {path === '/' ? <DashboardPage /> : path === '/curriculum' ? <CurriculumPage /> : <ModulePage title={pageTitle} Icon={Icon} description={module?.[1] ?? 'Engineering command center.'} />}
+      {path === '/' ? <DashboardPage /> : path === '/curriculum' ? <CurriculumPage /> : path === '/projects' ? <ProjectsPage /> : <ModulePage title={pageTitle} Icon={Icon} description={module?.[1] ?? 'Engineering command center.'} />}
     </main>
   </div>
 }

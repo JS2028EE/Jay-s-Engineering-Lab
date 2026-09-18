@@ -612,3 +612,50 @@ Added:
 Engineering calculation tests were expanded with floating-point-aware assertions and missing-input edge coverage.
 
 The UI now makes the requested quantity explicit before any calculation occurs, reducing ambiguity during circuit analysis and study work.
+
+
+## 32. Study Session stop failure fix
+
+### Problem
+
+Stopping an active Study Session failed with the PostgreSQL error:
+
+`record "new" has no field "updated_at"`
+
+The `study_sessions` table was the only current application table missing an `updated_at` column, while the shared `public.set_updated_at()` trigger was already attached to `study_sessions` by the V0.2 hardening migration.
+
+### Root cause
+
+The trigger executes:
+
+`new.updated_at = now()`
+
+during every update. When the Stop Session action updated `ended_at` and `duration_minutes`, PostgreSQL executed the trigger and failed because the record had no matching `updated_at` field.
+
+### Fix
+
+Added repository migration:
+
+`supabase/migrations/006_study_sessions_updated_at.sql`
+
+The migration:
+
+- adds `study_sessions.updated_at` with a `now()` default
+- recreates the existing `study_sessions_updated_at` trigger explicitly
+- preserves the shared timestamp-maintenance convention used by the other mutable application tables
+
+The same schema fix was applied to the production Supabase database before documenting the repository migration.
+
+### Verification
+
+Production verification confirmed:
+
+- `study_sessions.updated_at` exists
+- the `study_sessions_updated_at` trigger exists
+- a temporary Study Session could be updated successfully with `ended_at` and `duration_minutes`
+- the trigger populated `updated_at`
+- the temporary verification row was deleted afterward
+
+### Engineering lesson
+
+When a shared trigger assumes a column exists, schema consistency must be verified across every table to which the trigger is attached. A trigger is part of the table's operational contract, not an isolated helper.

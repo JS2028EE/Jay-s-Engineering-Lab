@@ -2,7 +2,7 @@
 
 All notable changes to Jay's Engineering Lab are documented here.
 
-## 0.3.2 — Engineering Tools expansion
+## Unreleased — Engineering Tools expansion
 
 ### Added
 - Explicit target selection for the core Ohm's Law + Power calculator.

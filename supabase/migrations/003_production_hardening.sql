@@ -2,7 +2,7 @@
 -- Applied to production on 2026-09-18 after Supabase advisor audit.
 
 revoke execute on function public.rls_auto_enable() from public, anon, authenticated;
-alter function public.set_updated_at() set search_path = public;
+alter function public.set_updated_at() set search_path = pg_catalog, public;
 
 create index if not exists circuits_subject_id_idx on public.circuits(subject_id);
 create index if not exists circuits_topic_id_idx on public.circuits(topic_id);

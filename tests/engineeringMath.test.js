@@ -9,33 +9,44 @@ import {
 } from '../src/lib/engineeringMath.js'
 
 test('solves resistance from voltage and current', () => {
-  assert.deepEqual(
-    solveOhmsLaw({ voltage: 5, current: 0.02 }),
-    { label: 'Resistance', value: 250, unit: 'Ω' },
-  )
+  assert.deepEqual(solveOhmsLaw({ voltage: 5, current: 0.02 }), { label: 'Resistance', value: 250, unit: 'Ω' })
+})
+
+test('solves current from voltage and resistance', () => {
+  assert.deepEqual(solveOhmsLaw({ voltage: 12, resistance: 600 }), { label: 'Current', value: 0.02, unit: 'A' })
+})
+
+test('solves voltage from current and resistance', () => {
+  assert.deepEqual(solveOhmsLaw({ current: 0.02, resistance: 600 }), { label: 'Voltage', value: 12, unit: 'V' })
+})
+
+test('solves current from voltage and power', () => {
+  assert.deepEqual(solveOhmsLaw({ voltage: 5, power: 0.25 }), { label: 'Current', value: 0.05, unit: 'A' })
+})
+
+test('solves voltage from current and power', () => {
+  assert.deepEqual(solveOhmsLaw({ current: 0.05, power: 0.25 }), { label: 'Voltage', value: 5, unit: 'V' })
+})
+
+test('solves current from power and resistance', () => {
+  const result = solveOhmsLaw({ power: 0.4, resistance: 100 })
+  assert.equal(result.label, 'Current')
+  assert.ok(Math.abs(result.value - Math.sqrt(0.004)) < 1e-12)
 })
 
 test('accepts zero voltage with a nonzero resistance', () => {
-  assert.deepEqual(
-    solveOhmsLaw({ voltage: 0, resistance: 100 }),
-    { label: 'Current', value: 0, unit: 'A' },
-  )
+  assert.deepEqual(solveOhmsLaw({ voltage: 0, resistance: 100 }), { label: 'Current', value: 0, unit: 'A' })
 })
 
-test('rejects ambiguous or divide-by-zero combinations', () => {
+test('rejects ambiguous, over-specified, or divide-by-zero input', () => {
   assert.equal(solveOhmsLaw({ voltage: 0, current: 0 }), null)
+  assert.equal(solveOhmsLaw({ voltage: 5, current: 0, resistance: 250 }), null)
   assert.equal(solveOhmsLaw({ voltage: 5, resistance: 0 }), null)
-  assert.deepEqual(
-    solveOhmsLaw({ voltage: 5, power: 0 }),
-    { label: 'Current', value: 0, unit: 'A' },
-  )
+  assert.deepEqual(solveOhmsLaw({ voltage: 5, power: 0 }), { label: 'Current', value: 0, unit: 'A' })
 })
 
 test('decodes a 1 kΩ resistor with 5% tolerance', () => {
-  assert.deepEqual(
-    decodeFourBandResistor('Brown', 'Black', 'Red', 'Gold'),
-    { ohms: 1000, tolerancePercent: 5 },
-  )
+  assert.deepEqual(decodeFourBandResistor('Brown', 'Black', 'Red', 'Gold'), { ohms: 1000, tolerancePercent: 5 })
 })
 
 test('rejects black as a leading digit in a standard 4-band resistor', () => {

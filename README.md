@@ -35,14 +35,16 @@ The dashboard, curriculum, projects, notes, tests, circuits, components, mistake
 - [Roadmap](docs/ROADMAP.md)
 - [User Guide](docs/USER_GUIDE.md)
 - [V0.2 Supabase hardening migration](supabase/migrations/002_system_hardening_storage.sql)
+- [Maintenance & recovery](docs/MAINTENANCE.md)
+- [Production readiness](docs/PRODUCTION_READINESS.md)
 
-## V0.2
+## V0.3
 
-The current application is a connected cloud-backed engineering workspace with real CRUD foundations, derived analytics, study-session tracking, physical lab locations, component relationships, project/circuit links, knowledge connections, private file storage support, data export, wellness measurements/streaks, and a UI recovery boundary.
+The current application is a V0.3 cloud-backed engineering workspace with authenticated CRUD foundations, derived analytics, study-session tracking, physical lab locations, component relationships, project/circuit links, knowledge connections, private file storage support, data export, wellness measurements/streaks, engineering tools, a Lab Guide, a UI error boundary, and independently scrollable sidebar navigation.
 
 For production deployment, Vercel builds from the GitHub main branch.
 
-Production hardening is now documented in `docs/PRODUCTION_READINESS.md`. The database has been security/performance audited; Auth leaked-password protection remains a Supabase dashboard setting that must be enabled before treating the security audit as fully clean.
+Production hardening is documented in `docs/PRODUCTION_READINESS.md`. Long-term operation and recovery are documented in `docs/MAINTENANCE.md`. The database has been security/performance audited; the remaining Auth advisor warning is leaked-password protection, a Supabase dashboard feature that depends on plan availability.
 
 ## License
 

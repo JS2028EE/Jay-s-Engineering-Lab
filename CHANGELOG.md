@@ -17,6 +17,8 @@ All notable changes to Jay's Engineering Lab are documented here.
 - 4-band resistor resistance decoder
 
 ### Improved
+- Scrollable desktop/mobile sidebar navigation keeps the full module list reachable without hiding System Settings or Core Load.
+- Added a long-term maintenance and recovery guide.
 - Test question editing
 - Question-level score recalculation
 - Direct missed-question to Mistake workflow

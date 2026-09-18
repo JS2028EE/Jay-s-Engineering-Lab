@@ -1,20 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Calculator, CircleHelp, RefreshCw, Sigma, Wrench } from 'lucide-react'
 
-const units = {
-  V: 1,
-  mV: 1e-3,
-  kV: 1e3,
-  A: 1,
-  mA: 1e-3,
-  uA: 1e-6,
-  ohm: 1,
-  kohm: 1e3,
-  Mohm: 1e6,
-  W: 1,
-  mW: 1e-3,
-}
-
 function format(value){
   if(!Number.isFinite(value)) return '—'
   const abs=Math.abs(value)

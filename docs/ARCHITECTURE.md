@@ -350,3 +350,15 @@ The application now has a top-level React Error Boundary.
 When a render-time UI failure occurs, the user receives a recovery screen rather than a blank page.
 
 This does not replace logging or automated testing. It is the last-resort user recovery layer.
+
+
+## V0.3 additions
+
+### Engineering Tools
+The client-only Engineering Tools workspace provides small deterministic utilities for Ohm's Law/power, resistor resistance decoding, and electrical unit conversion. These tools do not write to the database; important reasoning/results should be captured in Notes or Circuits.
+
+### Knowledge-graph authorization
+Generic graph rows are protected by database-level ownership checks. A graph relationship is only readable or writable when both its source and target entities resolve to records owned by the current authenticated user. Supported entity and relationship types are constrained at the database level.
+
+### Delivery verification
+GitHub Actions runs the Vite production build on pushes and pull requests to `main`. Vercel remains the production deployment path. The production commit must be checked independently from GitHub source state.

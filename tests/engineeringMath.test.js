@@ -5,44 +5,38 @@ import {
   decodeFourBandResistor,
   formatEngineeringValue,
   getElectricalUnitGroups,
-  solveOhmsLaw,
+  solveCapacitor,
+  solveCoreEE,
+  solveFrequencyPeriod,
+  solveInductor,
 } from '../src/lib/engineeringMath.js'
 
-test('solves resistance from voltage and current', () => {
-  assert.deepEqual(solveOhmsLaw({ voltage: 5, current: 0.02 }), { label: 'Resistance', value: 250, unit: 'Ω' })
+test('solves an explicitly selected resistance from voltage and current', () => {
+  assert.deepEqual(solveCoreEE('resistance', { voltage: 5, current: 0.02 }), { label: 'Resistance', value: 250, unit: 'Ω' })
 })
 
-test('solves current from voltage and resistance', () => {
-  assert.deepEqual(solveOhmsLaw({ voltage: 12, resistance: 600 }), { label: 'Current', value: 0.02, unit: 'A' })
+test('solves an explicitly selected current from voltage and resistance', () => {
+  assert.deepEqual(solveCoreEE('current', { voltage: 12, resistance: 600 }), { label: 'Current', value: 0.02, unit: 'A' })
 })
 
-test('solves voltage from current and resistance', () => {
-  assert.deepEqual(solveOhmsLaw({ current: 0.02, resistance: 600 }), { label: 'Voltage', value: 12, unit: 'V' })
+test('solves an explicitly selected voltage from current and resistance', () => {
+  assert.deepEqual(solveCoreEE('voltage', { current: 0.02, resistance: 600 }), { label: 'Voltage', value: 12, unit: 'V' })
 })
 
-test('solves current from voltage and power', () => {
-  assert.deepEqual(solveOhmsLaw({ voltage: 5, power: 0.25 }), { label: 'Current', value: 0.05, unit: 'A' })
+test('solves an explicitly selected power from voltage and current', () => {
+  assert.deepEqual(solveCoreEE('power', { voltage: 5, current: 0.05 }), { label: 'Power', value: 0.25, unit: 'W' })
 })
 
-test('solves voltage from current and power', () => {
-  assert.deepEqual(solveOhmsLaw({ current: 0.05, power: 0.25 }), { label: 'Voltage', value: 5, unit: 'V' })
+test('solves core EE power and square-root relationships', () => {
+  assert.deepEqual(solveCoreEE('current', { voltage: 5, power: 0.25 }), { label: 'Current', value: 0.05, unit: 'A' })
+  assert.deepEqual(solveCoreEE('resistance', { current: 0.05, power: 0.25 }), { label: 'Resistance', value: 100, unit: 'Ω' })
 })
 
-test('solves current from power and resistance', () => {
-  const result = solveOhmsLaw({ power: 0.4, resistance: 100 })
-  assert.equal(result.label, 'Current')
-  assert.ok(Math.abs(result.value - Math.sqrt(0.004)) < 1e-12)
-})
-
-test('accepts zero voltage with a nonzero resistance', () => {
-  assert.deepEqual(solveOhmsLaw({ voltage: 0, resistance: 100 }), { label: 'Current', value: 0, unit: 'A' })
-})
-
-test('rejects ambiguous, over-specified, or divide-by-zero input', () => {
-  assert.equal(solveOhmsLaw({ voltage: 0, current: 0 }), null)
-  assert.equal(solveOhmsLaw({ voltage: 5, current: 0, resistance: 250 }), null)
-  assert.equal(solveOhmsLaw({ voltage: 5, resistance: 0 }), null)
-  assert.deepEqual(solveOhmsLaw({ voltage: 5, power: 0 }), { label: 'Current', value: 0, unit: 'A' })
+test('rejects invalid core EE input', () => {
+  assert.equal(solveCoreEE('resistance', { voltage: 5, current: 0 }), null)
+  assert.equal(solveCoreEE('current', { voltage: 5, resistance: 0 }), null)
+  assert.equal(solveCoreEE('current', { power: -1, resistance: 100 }), null)
+  assert.equal(solveCoreEE('voltage', { voltage: 5, current: 0.02, resistance: 250 }), null)
 })
 
 test('decodes a 1 kΩ resistor with 5% tolerance', () => {
@@ -53,18 +47,50 @@ test('rejects black as a leading digit in a standard 4-band resistor', () => {
   assert.equal(decodeFourBandResistor('Black', 'Black', 'Red', 'Gold'), null)
 })
 
-test('converts kilo-ohms to ohms', () => {
+test('solves an inductor inductance from voltage and current slope', () => {
+  assert.deepEqual(solveInductor('inductance', { voltage: 2, rate: 400 }), { label: 'Inductance', value: 0.005, unit: 'H' })
+})
+
+test('solves inductor reactance and stored energy', () => {
+  const reactance = solveInductor('reactance', { frequency: 1000, inductance: 0.005 })
+  assert.ok(Math.abs(reactance.value - (2 * Math.PI * 1000 * 0.005)) < 1e-12)
+  assert.deepEqual(solveInductor('energy', { inductance: 0.005, current: 0.5 }), { label: 'Stored Energy', value: 0.000625, unit: 'J' })
+})
+
+test('solves capacitor capacitance, reactance, and current', () => {
+  assert.deepEqual(solveCapacitor('capacitance', { charge: 0.001, voltage: 5 }), { label: 'Capacitance', value: 0.0002, unit: 'F' })
+  const reactance = solveCapacitor('reactance', { frequency: 1000, capacitance: 0.000001 })
+  assert.ok(Math.abs(reactance.value - (1 / (2 * Math.PI * 1000 * 0.000001))) < 1e-12)
+  assert.deepEqual(solveCapacitor('current', { capacitance: 0.000001, rate: 1000 }), { label: 'Current', value: 0.001, unit: 'A' })
+})
+
+test('solves frequency and period in the utility calculator', () => {
+  assert.deepEqual(solveFrequencyPeriod('frequency', { period: 0.001 }), { label: 'Frequency', value: 1000, unit: 'Hz' })
+  assert.deepEqual(solveFrequencyPeriod('period', { frequency: 1000 }), { label: 'Period', value: 0.001, unit: 's' })
+})
+
+test('converts common electrical and passive-component units', () => {
   assert.equal(convertElectricalUnit(1, 'kΩ', 'Ω'), 1000)
+  assert.equal(convertElectricalUnit(1, 'mH', 'uH'), 1000)
+  assert.equal(convertElectricalUnit(1, 'uF', 'nF'), 1000)
+  assert.equal(convertElectricalUnit(1, 'MHz', 'kHz'), 1000)
+  assert.equal(convertElectricalUnit(1, 'ms', 'us'), 1000)
+  assert.equal(convertElectricalUnit(1, 'mC', 'uC'), 1000)
+  assert.equal(convertElectricalUnit(1, 'mJ', 'uJ'), 1000)
 })
 
 test('rejects cross-dimensional electrical conversion', () => {
   assert.equal(convertElectricalUnit(1, 'V', 'A'), null)
+  assert.equal(convertElectricalUnit(1, 'F', 'H'), null)
 })
 
-test('exposes grouped electrical units', () => {
+test('exposes expanded grouped electrical units', () => {
   const groups = getElectricalUnitGroups()
   assert.deepEqual(groups.Resistance, ['Ω', 'kΩ', 'MΩ'])
-  assert.deepEqual(groups.Power, ['W', 'mW'])
+  assert.deepEqual(groups.Frequency, ['Hz', 'kHz', 'MHz', 'GHz'])
+  assert.deepEqual(groups.Inductance, ['H', 'mH', 'uH', 'nH'])
+  assert.deepEqual(groups.Capacitance, ['F', 'mF', 'uF', 'nF', 'pF'])
+  assert.deepEqual(groups.Time, ['s', 'ms', 'us', 'ns'])
 })
 
 test('formats engineering values predictably', () => {

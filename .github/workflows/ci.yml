@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  quality:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,5 +18,7 @@ jobs:
           node-version: 22
       - name: Install
         run: npm install
-      - name: Build
+      - name: Automated tests and production build
         run: npm run check
+      - name: Dependency security audit
+        run: npm run audit

@@ -10,45 +10,77 @@ This matrix records what is currently verified, what is automated, and what stil
 
 | Area | Current status | Evidence |
 |---|---|---|
-| GitHub source on `main` | Verified | Repository source |
-| Vite production build | Verified | GitHub Actions CI |
-| Node baseline | Verified | `.nvmrc` = 22; CI uses Node 22 |
+| GitHub source on main | Verified | Repository source |
+| Deterministic engineering unit tests | Added / locally verified | 9 automated tests passed locally on 2026-09-18 |
+| Vite production build | Verified on prior release commits | GitHub Actions CI |
+| Node baseline | Verified | .nvmrc = 22; CI uses Node 22 |
+| Dependency security audit | Added to CI | npm audit high-severity gate |
 | Supabase Auth | Verified in production workflow | Email/password sign-in was successfully used |
-| Production Auth redirect configuration | Verified | Vercel production Site URL/redirect configuration |
-| Postgres RLS enabled | Verified | Production schema review |
+| Production Auth redirect configuration | Verified | Production redirect configuration |
+| Postgres RLS enabled | Verified | Direct production schema review |
+| Application-table anon privileges | Verified | Direct production privilege review |
 | Relationship ownership checks | Verified | Migration 004 + database policy review |
+| Function execute hardening | Verified | Migration 005 + direct privilege review |
 | Private Storage bucket | Verified | Production storage configuration/policies |
-| Security advisor | Verified | One remaining Auth warning documented below |
+| Security advisor | Reviewed | One remaining Auth warning documented below |
 | Performance advisor | Reviewed | Current findings are unused-index INFO notices |
 | Error Boundary | Implemented | Top-level React recovery boundary |
 | Sidebar scrolling | Implemented | Dedicated scroll container for primary navigation |
 | Control visibility | Implemented | Shared dark native-control and action-button styling |
 | Data export | Implemented | Settings JSON export |
-| Browser end-to-end suite | Not yet implemented | Roadmap item |
-| Full production browser smoke test | Not independently verified in this session | Vercel connector scope currently returns 403 |
+| Browser end-to-end suite | Not yet implemented | Future maturity item |
+| Full production browser smoke test | Not independently verified in this session | Vercel deployment is currently rate-limited |
 
-## Automated build gate
+## Automated quality gate
 
 GitHub Actions workflow:
 
-`.github/workflows/ci.yml`
+.github/workflows/ci.yml
 
-Triggers:
+The quality job runs:
 
-- push to `main`
-- pull request to `main`
+1. npm install
+2. npm run check
+3. npm run audit
 
-Current build gate:
+The check command runs:
 
-`npm install → npm run check → vite build`
+1. Node deterministic tests
+2. Vite production build
 
-A successful run proves that the repository can produce a Vite production build. It does not prove every interactive browser workflow is correct.
+A successful automated test/build run proves that the deterministic test suite passes and the application compiles. It does not prove every interactive browser workflow is correct.
+
+## Deterministic engineering tests
+
+The current suite covers:
+
+- Ohm's Law resistance/current/voltage relationships
+- zero and divide-by-zero handling
+- power-based calculations
+- 4-band resistor decoding
+- resistor tolerance
+- invalid leading resistor digit
+- same-dimension unit conversion
+- rejection of cross-dimensional conversion
+- grouped unit metadata
+- engineering-number formatting
+
+Local verification on 2026-09-18:
+
+9 tests passed.
 
 ## Direct production database verification
 
-A direct PostgreSQL inspection on 2026-09-18 confirmed that every application table in the exposed `public` schema currently has Row Level Security enabled, including curriculum, learning, projects, circuits, components, wellness, files, tags, and relationship tables.
+A direct PostgreSQL inspection on 2026-09-18 confirmed that every application table in the exposed public schema currently has Row Level Security enabled.
 
-This check verifies the database-level RLS switch state. Policy correctness remains covered by the migration review and Supabase advisor review.
+The same audit confirmed:
+
+- 0 application-table RLS policies target anon
+- anon has no SELECT, INSERT, UPDATE, or DELETE privileges on the application tables
+- ownership policies use authenticated identity and auth.uid()
+- child records verify parent ownership
+- relationship and entity-tag records verify referenced entity ownership
+- internal helper/trigger functions do not retain PUBLIC execute access
 
 ## Supabase advisor state
 
@@ -56,19 +88,29 @@ This check verifies the database-level RLS switch state. Policy correctness rema
 
 Current remaining warning:
 
-`auth_leaked_password_protection`
+auth_leaked_password_protection
 
-Supabase reports leaked-password protection as disabled. This is an Auth dashboard feature and is documented as Pro-and-above.
+Supabase reports leaked-password protection as disabled. This is an Auth dashboard setting rather than a database RLS failure.
 
 ### Performance
 
 Current advisor notices are unused-index INFO findings.
 
-These are expected to appear on a young, low-data project because an index can exist before real query volume exercises it. Index removal should not be based on this notice alone; reassess after meaningful usage.
+These are expected on a young, low-data project. Index removal should not be based on this notice alone; reassess after meaningful usage.
+
+## Deployment state
+
+On 2026-09-18, Vercel reported:
+
+Deployment rate limited — retry in 24 hours
+
+The affected GitHub commit had a successful GitHub Actions build but did not receive a successful Vercel deployment.
+
+Until a successful deployment check is recorded, production deployment status for newer commits is not considered verified.
 
 ## Manual smoke-test checklist
 
-For a meaningful release, verify:
+For the final core release, verify:
 
 ### Authentication
 - sign up
@@ -76,7 +118,7 @@ For a meaningful release, verify:
 - sign in
 - sign out
 - refresh while signed in
-- return to production after email confirmation
+- production email-confirmation return
 
 ### Core persistence
 - create a subject
@@ -102,7 +144,7 @@ Repeat on at least one record in Notes, Tests, Circuits, Components, Projects, M
 - link components to a circuit
 - create a knowledge-graph connection
 - refresh
-- confirm the links remain
+- confirm links remain
 
 ### Files
 - upload a test file
@@ -113,15 +155,16 @@ Repeat on at least one record in Notes, Tests, Circuits, Components, Projects, M
 
 ### Backup
 - export data
-- verify the JSON contains expected structured records
-- keep the export outside the application
+- verify expected structured records are present
+- retain the export outside the application
 
-### Responsive UI
+### Responsive/accessibility
 - short desktop viewport
 - mobile-width viewport
-- scroll sidebar
-- open each navigation module
-- verify controls remain readable
+- scroll the sidebar
+- open every navigation module
+- verify keyboard focus and readable controls
+- verify error messages and empty states
 
 ## Release evidence rule
 
@@ -135,43 +178,3 @@ For major changes, record:
 - follow-up work
 
 This turns debugging history into engineering history.
-
-
-## Vercel deployment rate-limit event
-
-On 2026-09-18, commit `e0581354eb0237b5c5b808a4b95dd60b1101f9ab` received these checks:
-
-- GitHub Actions `CI / build (push)`: **Successful**
-- Vercel: **Deployment rate limited — retry in 24 hours**
-
-The Vercel failure is an external deployment-capacity/rate-limit condition, not a failed application build. No source-code rollback or application change is justified by this check alone.
-
-Until the Vercel rate-limit window clears, production deployment status for newer commits must be treated as **not verified** unless another successful Vercel deployment check is recorded.
-
-Operational response:
-
-`Edit → build/CI → batch related changes → commit → deploy`
-
-Avoid unnecessary deployment-triggering pushes while the project is operating within the Vercel Hobby deployment limits.
-
-## Security verification — 2026-09-18
-
-A direct production PostgreSQL authorization audit confirmed:
-
-- all current application tables in `public` have Row Level Security enabled
-- application-table policies target the `authenticated` role
-- there are **0** application-table RLS policies for `anon`
-- the `anon` role has no SELECT, INSERT, UPDATE, or DELETE table privileges on the application tables
-- the private `engineering-lab-files` Storage bucket is not public
-- Storage object policies restrict read/insert/update/delete operations to an authenticated user's UUID folder
-- relationship and entity-tag access checks verify ownership of referenced entities
-- `public.entity_owned_by_user` no longer has PUBLIC/anon execute access; only `authenticated` can execute it
-- `public.set_updated_at` and `public.rls_auto_enable` do not have PUBLIC execute access
-
-The Supabase Security Advisor still reports one external Auth warning:
-
-`auth_leaked_password_protection`
-
-This warning is separate from the database authorization model and must be enabled from Supabase Auth settings when the feature is available on the current plan.
-
-These checks substantially reduce the risk of cross-user database access, but they do not protect an account whose credentials or active session are stolen.

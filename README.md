@@ -1,6 +1,12 @@
 # Jay's Engineering Lab
 
+> A personal Electrical Engineering operating system for learning, building, measuring, and documenting engineering work.
+
 A futuristic Electrical Engineering command center connecting curriculum, notes, tests, circuits, components, projects, mistakes, analytics, study sessions, and wellness.
+
+## Engineering principle
+
+The Lab treats engineering data as evidence, not decoration. The system separates theoretical calculations, simulations, physical measurements, observations, and derived metrics. PostgreSQL/Supabase is the source of truth; the UI is the control surface.
 
 ## Stack
 
@@ -28,6 +34,13 @@ Run `supabase/migrations/001_initial_schema.sql` in the Supabase SQL editor afte
 The dashboard, curriculum, projects, notes, tests, circuits, components, mistakes, analytics, and wellness workspaces are now connected to Supabase-backed records. Dashboard and analytics metrics are derived from stored data; remaining planned work includes richer editing, uploads, and advanced relationship/graph features.
 
 ## Documentation
+
+- [Engineering Standards](docs/ENGINEERING_STANDARDS.md)
+- [Verification Matrix](docs/VERIFICATION.md)
+- [Data Dictionary](docs/DATA_DICTIONARY.md)
+- [Maintenance & Recovery](docs/MAINTENANCE.md)
+- [Security Policy](SECURITY.md)
+- [Contributing](CONTRIBUTING.md)
 
 - [Project Summary](PROJECT_SUMMARY.md)
 - [Architecture](docs/ARCHITECTURE.md)

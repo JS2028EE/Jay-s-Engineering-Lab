@@ -120,14 +120,14 @@ export default function DashboardPage() {
         </div>
 
         <div className="panel activity-panel">
-          <div className="panel-head"><div><p className="eyebrow">LAB HEALTH</p><h2>Current State</h2></div><Activity size={18}/></div>
-          <div className="health-row"><span>Core Load</span><b>{coreLoad}%</b></div>
-          <div className="progress"><i style={{ width: coreLoad + '%' }}/></div>
-          <p className="health-note">{data ? data.totalRequirements - data.completedRequirements + ' curriculum requirements remain open.' : 'Syncing current curriculum load.'}</p>
-          <div className="health-row"><span>Unresolved Mistakes</span><b>{data ? data.unresolvedMistakes : '—'}</b></div>
-          <div className="health-row"><span>Component Units</span><b>{data ? data.componentQuantity : '—'}</b></div>
-          <div className="health-row"><span>Scored Test Average</span><b>{testAverage}</b></div>
-          <a className="ghost full" href="/mistakes"><AlertTriangle size={14}/> REVIEW MISTAKES</a>
+          <div className="panel-head"><div><p className="eyebrow">LAB ACTIVITY</p><h2>Recent Records</h2></div><Activity size={18}/></div>
+          {loading ? <div className="dashboard-loading">Loading activity...</div> : !data?.recentActivity?.length ? <div className="dashboard-loading">Your activity stream will populate as you create records.</div> : data.recentActivity.map((item,index) => (
+            <div className="activity" key={item.at + item.type + index}>
+              <time>{new Date(item.at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</time>
+              <div><b>{item.verb}</b><span>{item.text}</span></div>
+              <label>{item.type}</label>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -141,7 +141,11 @@ export default function DashboardPage() {
         </div>
 
         <div className="panel focus-panel">
-          <p className="eyebrow">NEXT STEP</p>
+          <p className="eyebrow">WEEKLY TELEMETRY</p>
+          <h2>{data ? data.weekStudyHours : '—'} h studied this week.</h2>
+          <p>{data ? data.studySessionCount + ' completed study sessions are stored in the Lab.' : 'Study activity will appear after you record sessions.'}</p>
+          <a className="secondary full" href="/study-sessions">OPEN STUDY SESSIONS <BookOpen size={15}/></a>
+          <p className="eyebrow next-step-label">NEXT STEP</p>
           <h2>{data && data.totalRequirements > data.completedRequirements ? 'Finish an open requirement.' : 'Start your engineering curriculum.'}</h2>
           <p>{data && data.totalRequirements > data.completedRequirements ? (data.totalRequirements - data.completedRequirements) + ' curriculum requirements are still open. Completing one will immediately change the real progress and core-load values across the Lab.' : 'Create your first Subject → Unit → Lesson → Requirement chain. Every completed requirement becomes part of your real engineering progress.'}</p>
           <a className="primary full" href="/curriculum">GO TO CURRICULUM <Target size={16}/></a>

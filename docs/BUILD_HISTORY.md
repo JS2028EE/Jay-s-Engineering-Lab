@@ -386,3 +386,14 @@ Implemented:
 The production database was verified after the hardening statements were applied. The remaining Supabase security advisor item is Auth leaked-password protection, which is configured from the Supabase Auth dashboard.
 
 The exact production deployment must still be checked after the V0.3 commits settle.
+
+
+## 22. Final V0.3 release hygiene
+
+Additional reliability improvements:
+
+- Unknown application routes now show a real 404 recovery screen instead of the retired placeholder module.
+- The repository CI workflow runs a deterministic Vite build without assuming a package-lock file that is not currently committed.
+- The release documentation now includes security policy, changelog, user guide, and production readiness records.
+
+This keeps the product rule intact: the interface should never advertise functionality that does not actually exist.

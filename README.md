@@ -16,22 +16,34 @@ React + Vite · JavaScript · Supabase/PostgreSQL · Framer Motion · Recharts �
 
 1. Install Node.js LTS.
 2. Clone this repository.
-3. Run `npm install`.
-4. Copy `.env.example` to `.env`.
+3. Run npm install.
+4. Copy .env.example to .env.
 5. Add the Supabase project URL and browser-safe anon/publishable key.
-6. Run `npm run dev`.
+6. Run npm run dev.
+
+Quality commands:
+
+- npm test — deterministic engineering tests
+- npm run check — tests plus production Vite build
+- npm run audit — high-severity dependency audit
 
 Never commit a Supabase service-role key or other secret. Browser code should only use the public client key intended for frontend use.
 
 ## Supabase setup
 
-Run `supabase/migrations/001_initial_schema.sql` in the Supabase SQL editor after creating the project. Then configure authentication and owner RLS policies before putting personal data into production.
+Run the Supabase migrations in order after creating the project. Then configure authentication and owner RLS policies before putting personal data into production.
 
-## V0.1 architecture
+## V0.3.1 near-final foundation
 
-`Subject → Unit → Lesson → Requirement` drives automatic curriculum progress. Dashboard statistics should be derived from database records rather than duplicated manually.
+The current application is the near-final core personal engineering workspace with authenticated CRUD foundations, derived analytics, study-session tracking, physical lab locations, component relationships, project/circuit links, knowledge connections, private file storage support, data export, wellness measurements/streaks, deterministic engineering tools, a Lab Guide, a UI error boundary, independently scrollable sidebar navigation, and an automated quality gate.
 
-The dashboard, curriculum, projects, notes, tests, circuits, components, mistakes, analytics, and wellness workspaces are now connected to Supabase-backed records. Dashboard and analytics metrics are derived from stored data; remaining planned work includes richer editing, uploads, and advanced relationship/graph features.
+The automated gate covers:
+
+- deterministic engineering calculations
+- production Vite build
+- high-severity dependency audit
+
+The database is audited for RLS and per-user ownership. Production deployment is a separate release check.
 
 ## Documentation
 
@@ -41,24 +53,25 @@ The dashboard, curriculum, projects, notes, tests, circuits, components, mistake
 - [Maintenance & Recovery](docs/MAINTENANCE.md)
 - [Security Policy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
-
 - [Project Summary](PROJECT_SUMMARY.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Build History](docs/BUILD_HISTORY.md)
 - [Roadmap](docs/ROADMAP.md)
 - [User Guide](docs/USER_GUIDE.md)
-- [V0.2 Supabase hardening migration](supabase/migrations/002_system_hardening_storage.sql)
-- [Maintenance & recovery](docs/MAINTENANCE.md)
-- [Production readiness](docs/PRODUCTION_READINESS.md)
+- [Production Readiness](docs/PRODUCTION_READINESS.md)
 
-## V0.3
+## Production
 
-The current application is a V0.3 cloud-backed engineering workspace with authenticated CRUD foundations, derived analytics, study-session tracking, physical lab locations, component relationships, project/circuit links, knowledge connections, private file storage support, data export, wellness measurements/streaks, engineering tools, a Lab Guide, a UI error boundary, and independently scrollable sidebar navigation.
+Vercel builds from the GitHub main branch.
 
-For production deployment, Vercel builds from the GitHub main branch.
+A Vercel deployment-rate-limit event occurred on 2026-09-18. GitHub Actions passed the application build for the affected commit, while Vercel rejected deployment because of its deployment limit. The production release gate therefore remains open until a successful deployment is independently verified.
 
-Production hardening is documented in `docs/PRODUCTION_READINESS.md`. Long-term operation and recovery are documented in `docs/MAINTENANCE.md`. The database has been security/performance audited; the remaining Auth advisor warning is leaked-password protection, a Supabase dashboard feature that depends on plan availability.
+## Security
+
+The frontend is restricted to the browser-safe Supabase publishable/anon key. Application data is protected by authenticated access and Row Level Security. The engineering-lab-files Storage bucket is private and its object policies are scoped to the authenticated user's UUID folder.
+
+The current remaining Supabase Security Advisor warning is leaked-password protection. Enable it from Supabase Auth settings when available on the current plan.
 
 ## License
 
-MIT — see `LICENSE`.
+MIT — see LICENSE.

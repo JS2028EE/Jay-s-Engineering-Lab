@@ -264,3 +264,89 @@ The wellness subsystem can still have its own consistency metrics, streaks, goal
 The visual layer may be futuristic.
 
 The data layer must be boring, explicit, secure, and correct.
+
+
+## V0.2 implemented capabilities
+
+The frontend now includes dedicated workspaces for:
+
+- study sessions with timer/manual entry
+- knowledge connections
+- private files
+- settings and JSON export
+
+Existing workspaces gained deeper workflows:
+
+- notes: edit + subject/topic links
+- tests: edit + question breakdown
+- circuits: edit + component links
+- components: edit + physical locations
+- projects: edit + component links
+- mistakes: edit + subject/topic links
+- wellness: edit + measurements + streaks
+- curriculum: edit subjects, units, lessons, and requirements
+
+## Storage architecture
+
+Engineering files use a private Supabase Storage bucket.
+
+The intended path convention is:
+
+`<authenticated-user-uuid>/<random-id>-<safe-file-name>`
+
+Storage object policies check that the first path segment matches the authenticated user's UUID.
+
+This prevents one user from reading another user's files through the Storage API.
+
+## Backup architecture
+
+Settings can export structured database records to JSON.
+
+The export is intentionally separate from binary file backup. Storage objects remain in Supabase Storage and are not embedded into the JSON export.
+
+A mature backup system should eventually export both:
+
+1. structured database records
+2. a manifest of Storage objects
+
+and provide an import/restore tool.
+
+## Activity model
+
+The dashboard activity stream is currently derived from recent records across the core entities.
+
+This is useful immediately, but a future version may add a true `activity_events` table for immutable events such as:
+
+- requirement completed
+- test recorded
+- note updated
+- project task completed
+- component added
+- mistake resolved
+- study session completed
+
+A dedicated event table would provide richer history without repeatedly querying every table.
+
+## Analytics architecture
+
+Dashboard and Analytics use a shared data service rather than separate metric definitions.
+
+This reduces the chance that:
+
+`Dashboard says 74%`
+
+while:
+
+`Analytics says 71%`
+
+for the same underlying records.
+
+Future database-side functions/views should centralize the most important calculations even further.
+
+## Reliability architecture
+
+The application now has a top-level React Error Boundary.
+
+When a render-time UI failure occurs, the user receives a recovery screen rather than a blank page.
+
+This does not replace logging or automated testing. It is the last-resort user recovery layer.

@@ -20,16 +20,13 @@ GitHub source, Supabase schema/security/performance advisors, deployment configu
 Supabase's security advisor reports leaked-password protection is disabled. Enable leaked-password protection in Supabase Auth password-security settings. This is dashboard configuration, not a SQL migration.
 
 ## Remaining product work
-- Automated frontend smoke tests and browser verification.
-- Editable test questions and score recalculation.
-- One-click mistake creation from missed questions.
-- Rich Notes and attachment workflows.
-- Inventory stock-movement history and low-stock alerts.
-- Project activity history.
-- Stronger database-level ownership validation for generic relationships.
-- Import/restore and Storage manifest backup.
-- Engineering calculators and practice tools.
-- Production browser smoke testing on every major release.
+- Rich Notes formatting, equations, and broader attachment workflows.
+- Inventory stock-movement history, project checkout/return, and low-stock alerts.
+- Project activity history and richer entity detail pages.
+- Import/restore and a Storage-object backup manifest.
+- Deeper analytics history and trend views.
+- Circuit editor/simulation and advanced waveform tooling.
+- Comprehensive browser end-to-end testing and broader accessibility/mobile regression coverage.
 
 ## Current practical status
 

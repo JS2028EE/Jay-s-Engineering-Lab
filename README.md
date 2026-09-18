@@ -25,4 +25,4 @@ Run `supabase/migrations/001_initial_schema.sql` in the Supabase SQL editor afte
 
 `Subject → Unit → Lesson → Requirement` drives automatic curriculum progress. Dashboard statistics should be derived from database records rather than duplicated manually.
 
-The current UI is a functional frontend shell for every planned module. Cloud CRUD, authentication, storage uploads, and advanced analytics are the next integration layer.
+The dashboard, curriculum, projects, notes, tests, circuits, components, mistakes, analytics, and wellness workspaces are now connected to Supabase-backed records. Dashboard and analytics metrics are derived from stored data; remaining planned work includes richer editing, uploads, and advanced relationship/graph features.

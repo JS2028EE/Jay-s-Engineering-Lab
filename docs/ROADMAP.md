@@ -2,7 +2,7 @@
 
 This roadmap separates what is working now from what still needs to be built.
 
-## CURRENT — V0.2 connected foundation
+## CURRENT — V0.3 connected foundation
 
 ### Working workspaces
 
@@ -34,9 +34,9 @@ This roadmap separates what is working now from what still needs to be built.
 - Mistake resolution state
 - Inventory quantity totals
 
-## PHASE 1 — Finish CRUD quality
+## NEXT — V0.4 deep learning workflows
 
-A significant part of this phase is now implemented: Notes, Tests, Circuits, Components, Projects, Mistakes, Curriculum, and Wellness support real editing and richer relationships. The remaining work is to deepen editing, add attachments, question-to-mistake workflows, and bulk operations.
+Most of the original CRUD foundation is implemented. V0.4 should focus on deeper editing, richer attachments, cross-links, and study workflows rather than rebuilding the core lifecycle.
 
 The current modules need full lifecycle support, not only create/delete.
 
@@ -126,7 +126,7 @@ Add:
 - history
 - weekly study graphs
 
-## PHASE 2 — Connect the system
+## V0.5 — Connect and deepen the system
 
 The next major goal is to make the modules communicate.
 
@@ -162,7 +162,7 @@ A component should be able to answer:
 - Which circuits use it?
 - How many are left?
 
-## PHASE 3 — Knowledge graph
+## V0.6 — Knowledge graph
 
 Implement the existing `relationships` table.
 
@@ -181,7 +181,7 @@ derived_from
 
 Then build an interactive engineering knowledge graph.
 
-## PHASE 4 — Files and storage
+## V0.7 — Files and storage
 
 Add real Supabase Storage integration.
 
@@ -197,7 +197,7 @@ Supported artifacts:
 
 Database records should store metadata and storage paths.
 
-## PHASE 5 — Advanced analytics
+## V0.8 — Advanced analytics
 
 Add:
 
@@ -213,7 +213,7 @@ Add:
 
 Analytics should always clearly identify the underlying data source.
 
-## PHASE 6 — Real engineering tools
+## V0.9 — Real engineering tools
 
 Long-term:
 
@@ -228,7 +228,7 @@ Long-term:
 - waveform tools
 - electronics reference tables
 
-## PHASE 7 — Circuit laboratory
+## V1.0 — Circuit laboratory
 
 Long-term advanced system:
 
@@ -243,7 +243,7 @@ Long-term advanced system:
 - simulated oscilloscope
 - animated current flow
 
-## PHASE 8 — Physical lab integration
+## Post-V1.0 — Physical lab integration
 
 Long-term physical-digital bridge:
 
@@ -255,7 +255,7 @@ Long-term physical-digital bridge:
 - project checkout/return
 - low-stock alerts
 
-## PHASE 9 — Reliability
+## Reliability gate
 
 Before calling the system mature:
 
@@ -272,7 +272,7 @@ Before calling the system mature:
 - data export
 - backup strategy
 
-## PHASE 10 — Intelligent layer
+## Future intelligent layer
 
 Only after the underlying data is reliable:
 
@@ -294,58 +294,3 @@ A module is considered complete only when it supports the full lifecycle:
 
 and when the relevant dashboard/analytics values automatically respond to the data.
 
-
-## V0.3 — Production hardening
-
-- Security advisor remediation
-- Foreign-key performance indexes
-- MIT licensing
-- Production readiness audit
-- Auth security configuration review
-- Automated smoke tests
-- Stronger relationship ownership enforcement
-- Deployment verification
-
-## V0.4 — Deep learning workflows
-
-- Editable test questions
-- Score recalculation from question points
-- One-click mistake creation from missed questions
-- Rich Notes with Markdown/equations/attachments
-- Cross-links between lessons, notes, tests, circuits, projects, and mistakes
-- Habit goals and history
-- Study-session edit/pause/resume
-
-## V0.5 — Engineering laboratory tools
-
-- Ohm's Law
-- Power/voltage/current/resistance calculators
-- Resistor color-code decoder
-- Unit conversion
-- Formula/reference library
-- Circuit problem generator
-- Flashcards and practice tests
-- Waveform utilities
-
-## V0.6 — Physical ↔ digital laboratory
-
-- QR component labels
-- Stock movement history
-- Project checkout/return
-- Low-stock alerts
-- Component photos/datasheets
-- Project BOM
-
-## V0.7 — Advanced analytics
-
-- Weekly/monthly study trends
-- Test score history
-- Mistake frequency and repeated-mistake detection
-- Requirement completion velocity
-- Project completion history
-- Inventory usage history
-- Immutable activity events
-
-## V1.0 — Engineering Operating System
-
-A mature release spans curriculum, learning feedback, physical inventory, projects, engineering tools, files, analytics, and the physical lab with verified persistence, security, backups, and browser-tested workflows.

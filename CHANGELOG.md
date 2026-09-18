@@ -60,3 +60,9 @@ Connected cloud-backed workspaces, richer CRUD, study sessions, knowledge connec
 ## 0.1.0
 
 Initial command-center foundation, curriculum hierarchy, Supabase schema, authentication, dashboard calculations, and core workspace architecture.
+
+
+### 0.3.1 follow-up
+- Corrected backup export metadata from V0.2 to V0.3.1.
+- Expanded engineering calculation tests to cover all six core input-pair paths and additional edge cases.
+- Added weekly Dependabot updates for npm dependencies and GitHub Actions.

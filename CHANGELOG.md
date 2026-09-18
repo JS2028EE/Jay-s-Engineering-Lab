@@ -17,6 +17,7 @@ All notable changes to Jay's Engineering Lab are documented here.
 - 4-band resistor resistance decoder
 
 ### Improved
+- Restored dark, high-contrast styling for icon actions, delete/create controls, native selectors, and number inputs so controls remain visible without hover.
 - Scrollable desktop/mobile sidebar navigation keeps the full module list reachable without hiding System Settings or Core Load.
 - Added a long-term maintenance and recovery guide.
 - Test question editing

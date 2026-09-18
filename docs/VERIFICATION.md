@@ -44,6 +44,12 @@ Current build gate:
 
 A successful run proves that the repository can produce a Vite production build. It does not prove every interactive browser workflow is correct.
 
+## Direct production database verification
+
+A direct PostgreSQL inspection on 2026-09-18 confirmed that every application table in the exposed `public` schema currently has Row Level Security enabled, including curriculum, learning, projects, circuits, components, wellness, files, tags, and relationship tables.
+
+This check verifies the database-level RLS switch state. Policy correctness remains covered by the migration review and Supabase advisor review.
+
 ## Supabase advisor state
 
 ### Security

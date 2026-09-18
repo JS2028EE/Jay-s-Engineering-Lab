@@ -96,7 +96,7 @@ function TargetCalculator({ eyebrow, title, icon, description, targets, methods,
   const [target, setTarget] = useState(defaultTarget)
   const [method, setMethod] = useState(methods[defaultTarget][0].value)
   const [inputs, setInputs] = useState({})
-  const currentMethod = methods[target][method] ? methods[target][method] : methods[target][0]
+  const currentMethod = methods[target].find(item => item.value === method) || methods[target][0]
 
   function changeTarget(nextTarget) {
     setTarget(nextTarget)

@@ -546,3 +546,37 @@ Production verification confirmed:
 - 0 application-table policies target anon
 
 The Supabase Security Advisor continues to report only the pre-existing leaked-password-protection warning.
+
+
+## 29. V0.3.1 near-final reliability pass
+
+### Engineering tools
+
+The engineering calculation layer was separated from the React UI into a deterministic library so core calculations can be tested independently.
+
+Improvements:
+
+- Ohm's Law requires exactly two supplied values.
+- divide-by-zero and ambiguous zero cases are handled explicitly.
+- four-band resistor tolerance is now represented.
+- a standard resistor cannot start with a black significant digit.
+- electrical unit conversion is dimension-aware and rejects invalid conversions such as volts-to-amps.
+
+### Automated quality gate
+
+The repository now includes Node's built-in test runner with deterministic engineering tests.
+
+CI now performs:
+
+- dependency installation
+- automated tests
+- Vite production build
+- high-severity dependency audit
+
+### Authentication
+
+New-account creation now requests a minimum eight-character password in the client UI while preserving compatibility for existing sign-ins.
+
+### Release position
+
+V0.3.1 is treated as the near-final core personal release line. Advanced features such as rich Notes, inventory transaction history, full restore/import, interactive circuit simulation, and comprehensive browser E2E testing remain intentionally deferred expansions rather than unfinished core architecture.

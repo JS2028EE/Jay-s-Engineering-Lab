@@ -6,6 +6,7 @@ Date: 2026-09-18
 GitHub source, Supabase schema/security/performance advisors, deployment configuration, application architecture, and documented feature lifecycle.
 
 ## Remediated
+- Fixed independently scrollable sidebar navigation so all modules remain reachable on short desktop/mobile viewports.
 - Revoked public/anonymous/authenticated EXECUTE access to the public SECURITY DEFINER function `rls_auto_enable()`.
 - Hardened the `set_updated_at()` function search path.
 - Added indexes for foreign-key columns identified by the Supabase performance advisor.
@@ -30,5 +31,14 @@ Supabase's security advisor reports leaked-password protection is disabled. Enab
 - Engineering calculators and practice tools.
 - Production browser smoke testing on every major release.
 
+## Current practical status
+
+The V0.3 application foundation is suitable for normal personal use. The current release still has a small number of maturity gaps documented in `docs/MAINTENANCE.md`; these are expansion/testing items rather than reasons to stop using the existing core CRUD system.
+
+The remaining Supabase security advisor warning is Auth leaked-password protection. Supabase documents this as a Pro-and-above dashboard feature.
+
 ## Release gate
-The Lab is ready for normal personal use when the current production commit is deployed successfully, core workflows survive refresh, RLS/Storage isolation is verified, Auth settings are reviewed, and backups can be exported.
+
+The Lab is considered operational for personal use when the current production commit is deployed successfully, core workflows survive refresh, RLS/Storage isolation is verified, Auth settings are reviewed, and backups can be exported.
+
+Long-term stability is not a guarantee that Vercel, Supabase, browsers, or dependency releases will remain unchanged. The maintenance guide defines the recommended annual review.

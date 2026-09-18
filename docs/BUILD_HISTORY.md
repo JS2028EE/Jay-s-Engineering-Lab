@@ -397,3 +397,41 @@ Additional reliability improvements:
 - The release documentation now includes security policy, changelog, user guide, and production readiness records.
 
 This keeps the product rule intact: the interface should never advertise functionality that does not actually exist.
+
+
+## 23. Sidebar accessibility and long-term reliability pass
+
+### Problem
+
+The sidebar contained more navigation items than could fit vertically on a typical desktop viewport. Because the sidebar itself was fixed and its navigation area had no independent scroll container, lower modules could become unreachable.
+
+### Fix
+
+The sidebar was changed to:
+
+- use the viewport height explicitly
+- keep the shell clipped to the viewport
+- make the primary navigation independently scrollable
+- preserve the Core Load readout and System Settings at the bottom
+- retain the same behavior on smaller screens
+- expose a semantic `aria-label` for primary navigation
+
+A subtle scrollbar treatment was added so the control remains discoverable without changing the command-center visual language.
+
+### Result
+
+All navigation modules remain reachable even when the viewport is shorter than the full navigation list.
+
+## 24. Long-term operations documentation
+
+A dedicated `docs/MAINTENANCE.md` document now records:
+
+- backup cadence
+- Auth security settings
+- deployment verification
+- annual review procedure
+- known limitations
+- recovery guidance
+- the practical readiness definition
+
+This prevents operational knowledge from living only in conversation history.

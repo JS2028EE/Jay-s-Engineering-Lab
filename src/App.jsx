@@ -139,9 +139,13 @@ function AppShell({ user }) {
     <main className="main">
       <header className="topbar"><button className="icon-btn menu-btn" onClick={() => setOpen(true)}><Menu size={20}/></button><div className="crumb"><span>ENGINEERING LAB</span><b>/</b><strong>{pageTitle.toUpperCase()}</strong></div><div className="top-actions"><span className="user-chip"><UserRound size={14}/>{user.email}</span><span className="clock mono">{status}</span><button className="icon-btn signout-btn" onClick={signOut} title="Sign out"><LogOut size={16}/></button><button className="quick-btn" onClick={() => setQuick(!quick)}><Plus size={17}/> QUICK ACTION</button></div></header>
       {quick && <div className="quick-panel">{quickItems.map(([href, label]) => <NavLink key={href} to={href} onClick={() => setQuick(false)}>{label}</NavLink>)}</div>}
-      {path === '/' ? <DashboardPage /> : path === '/curriculum' ? <CurriculumPage /> : path === '/projects' ? <ProjectsPage /> : path === '/notes' ? <NotesPage /> : path === '/tests' ? <TestsPage /> : path === '/circuits' ? <CircuitsPage /> : path === '/components' ? <ComponentsPage /> : path === '/mistakes' ? <MistakesPage /> : path === '/analytics' ? <AnalyticsPage /> : path === '/wellness' ? <WellnessPage /> : path === '/study-sessions' ? <StudySessionsPage /> : path === '/connections' ? <ConnectionsPage /> : path === '/files' ? <FilesPage /> : path === '/tools' ? <EngineeringToolsPage /> : path === '/guide' ? <GuidePage /> : path === '/settings' ? <SettingsPage /> : <ModulePage title={pageTitle} Icon={Icon} description={module?.[1] ?? 'Engineering command center.'} />}
+      {path === '/' ? <DashboardPage /> : path === '/curriculum' ? <CurriculumPage /> : path === '/projects' ? <ProjectsPage /> : path === '/notes' ? <NotesPage /> : path === '/tests' ? <TestsPage /> : path === '/circuits' ? <CircuitsPage /> : path === '/components' ? <ComponentsPage /> : path === '/mistakes' ? <MistakesPage /> : path === '/analytics' ? <AnalyticsPage /> : path === '/wellness' ? <WellnessPage /> : path === '/study-sessions' ? <StudySessionsPage /> : path === '/connections' ? <ConnectionsPage /> : path === '/files' ? <FilesPage /> : path === '/tools' ? <EngineeringToolsPage /> : path === '/guide' ? <GuidePage /> : path === '/settings' ? <SettingsPage /> : <NotFoundPage />}
     </main>
   </div>
+}
+
+function NotFoundPage(){
+  return <div className="content"><section className="panel not-found"><p className="eyebrow">ROUTE NOT FOUND</p><h1>404</h1><p>That Lab route does not exist. Use the sidebar or return to the Dashboard.</p><div><NavLink className="primary" to="/">RETURN TO DASHBOARD</NavLink><NavLink className="secondary" to="/guide">OPEN LAB GUIDE</NavLink></div></section></div>
 }
 
 function ModulePage({ title, Icon, description }) {

@@ -27,6 +27,7 @@ This matrix records what is currently verified, what is automated, and what stil
 | Error Boundary | Implemented | Top-level React recovery boundary |
 | Sidebar scrolling | Implemented | Dedicated scroll container for primary navigation |
 | Control visibility | Implemented | Shared dark native-control and action-button styling |
+| Study Session stop/update | Verified | Production trigger/schema fix applied and tested |
 | Data export | Implemented | Settings JSON export |
 | Browser end-to-end suite | Not yet implemented | Future maturity item |
 | Full production browser smoke test | Not independently verified in this session | Vercel deployment is currently rate-limited |
@@ -65,9 +66,9 @@ The current suite covers:
 - grouped unit metadata
 - engineering-number formatting
 
-Local verification on 2026-09-18:
+Latest engineering-tool CI verification: 16 tests passed on the expanded-tool feature line.
 
-14 tests passed.
+Study Session stop behavior was additionally verified directly against the production database after the timestamp schema fix.
 
 ## Direct production database verification
 
@@ -137,7 +138,15 @@ For the final core release, verify:
 - delete
 - confirm the record is gone
 
-Repeat on at least one record in Notes, Tests, Circuits, Components, Projects, Mistakes, and Study Sessions.
+Repeat on at least one record in Notes, Tests, Circuits, Components, Projects, and Mistakes.
+
+### Study Sessions
+- start a session
+- confirm the live timer advances
+- stop the session
+- confirm `ended_at` and `duration_minutes` are saved
+- refresh
+- confirm the completed session remains in history
 
 ### Relationships
 - link components to a project

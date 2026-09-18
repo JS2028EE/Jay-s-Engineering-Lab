@@ -482,3 +482,67 @@ The standards establish evidence levels, unit discipline, reproducible calculati
 The verification matrix separates automated build evidence from manual browser verification so a successful compilation is never mistaken for complete product verification.
 
 A direct production PostgreSQL check also confirmed RLS is enabled on every current application table in the exposed `public` schema.
+
+
+## 27. Vercel deployment rate-limit event
+
+### Event
+
+Commit:
+
+`e0581354eb0237b5c5b808a4b95dd60b1101f9ab`
+
+On 2026-09-18, GitHub reported:
+
+- **CI / build (push): Successful in 28s**
+- **Vercel: Deployment rate limited — retry in 24 hours**
+
+### Interpretation
+
+The repository's production build passed. Vercel did not deploy this commit because the project hit a Vercel deployment rate limit.
+
+This is an infrastructure/account-limit event, not evidence that the application source failed to compile.
+
+### Engineering response
+
+No application rollback is required.
+
+The operational workflow is now:
+
+`Batch related changes → CI verification → one meaningful push → deployment verification`
+
+Deployment status must remain a separate verification item from GitHub build status.
+
+## 28. Database function privilege hardening
+
+### Finding
+
+A security review found that the PostgreSQL function `public.entity_owned_by_user` had retained default PUBLIC execute privileges even though migration 004 attempted to revoke anon access.
+
+The function was SECURITY INVOKER and was already used to enforce ownership inside RLS policies, but unnecessary PUBLIC execution was removed to reduce its exposed API surface.
+
+The trigger helper `public.set_updated_at` was also removed from PUBLIC execute access because it is an internal trigger function, not an application RPC.
+
+### Fix
+
+Applied database migration:
+
+`function_execute_hardening`
+
+with:
+
+- PUBLIC execute removed from `public.entity_owned_by_user(text, uuid, uuid)`
+- execute retained for `authenticated`
+- PUBLIC execute removed from `public.set_updated_at()`
+
+### Verification
+
+Production verification confirmed:
+
+- `entity_owned_by_user`: anon = false, authenticated = true
+- `set_updated_at`: anon = false, authenticated = false
+- `rls_auto_enable`: anon = false, authenticated = false
+- 0 public application tables have RLS disabled
+- 0 application-table policies target anon
+
+The Supabase Security Advisor continues to report only the pre-existing leaked-password-protection warning.

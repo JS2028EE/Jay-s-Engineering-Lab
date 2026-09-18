@@ -135,3 +135,43 @@ For major changes, record:
 - follow-up work
 
 This turns debugging history into engineering history.
+
+
+## Vercel deployment rate-limit event
+
+On 2026-09-18, commit `e0581354eb0237b5c5b808a4b95dd60b1101f9ab` received these checks:
+
+- GitHub Actions `CI / build (push)`: **Successful**
+- Vercel: **Deployment rate limited — retry in 24 hours**
+
+The Vercel failure is an external deployment-capacity/rate-limit condition, not a failed application build. No source-code rollback or application change is justified by this check alone.
+
+Until the Vercel rate-limit window clears, production deployment status for newer commits must be treated as **not verified** unless another successful Vercel deployment check is recorded.
+
+Operational response:
+
+`Edit → build/CI → batch related changes → commit → deploy`
+
+Avoid unnecessary deployment-triggering pushes while the project is operating within the Vercel Hobby deployment limits.
+
+## Security verification — 2026-09-18
+
+A direct production PostgreSQL authorization audit confirmed:
+
+- all current application tables in `public` have Row Level Security enabled
+- application-table policies target the `authenticated` role
+- there are **0** application-table RLS policies for `anon`
+- the `anon` role has no SELECT, INSERT, UPDATE, or DELETE table privileges on the application tables
+- the private `engineering-lab-files` Storage bucket is not public
+- Storage object policies restrict read/insert/update/delete operations to an authenticated user's UUID folder
+- relationship and entity-tag access checks verify ownership of referenced entities
+- `public.entity_owned_by_user` no longer has PUBLIC/anon execute access; only `authenticated` can execute it
+- `public.set_updated_at` and `public.rls_auto_enable` do not have PUBLIC execute access
+
+The Supabase Security Advisor still reports one external Auth warning:
+
+`auth_leaked_password_protection`
+
+This warning is separate from the database authorization model and must be enabled from Supabase Auth settings when the feature is available on the current plan.
+
+These checks substantially reduce the risk of cross-user database access, but they do not protect an account whose credentials or active session are stolen.

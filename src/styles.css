@@ -102,3 +102,11 @@
   .add-task-row{flex-wrap:wrap}
   .add-task-row input{flex:1 1 100%}
 }
+
+.quick-panel a{background:none;border:1px solid var(--line);padding:9px 13px;text-align:left;color:#9cafc5;font-size:10px;cursor:pointer;text-decoration:none}
+.quick-panel a:hover{color:#eaf7ff;border-color:rgba(76,230,255,.25);background:rgba(76,230,255,.04)}
+.chart-wrap{height:190px;display:flex;flex-direction:column;justify-content:flex-start}
+.chart-empty{height:150px;display:grid;place-items:center;color:#53667f;font:9px monospace;border-top:1px solid rgba(117,154,209,.08);border-bottom:1px solid rgba(117,154,209,.08)}
+.health-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(117,154,209,.08);font-size:10px;color:#7789a2}
+.health-row b{font:11px monospace;color:#cfe8ff}
+.health-note{font-size:9px;line-height:1.6;color:#596c86;margin:8px 0 7px}

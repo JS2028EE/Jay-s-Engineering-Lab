@@ -5,6 +5,7 @@ All notable changes to Jay's Engineering Lab are documented here.
 ## 0.3.0 — 2026-09-18
 
 ### Added
+- Engineering standards, verification matrix, database data dictionary, maintenance guidance, contribution standards, and GitHub issue templates.
 - MIT License
 - In-app Engineering Tools
 - In-app Lab Guide

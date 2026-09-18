@@ -293,3 +293,59 @@ A module is considered complete only when it supports the full lifecycle:
 `Create → Read → Edit → Delete → Relate → Analyze`
 
 and when the relevant dashboard/analytics values automatically respond to the data.
+
+
+## V0.3 — Production hardening
+
+- Security advisor remediation
+- Foreign-key performance indexes
+- MIT licensing
+- Production readiness audit
+- Auth security configuration review
+- Automated smoke tests
+- Stronger relationship ownership enforcement
+- Deployment verification
+
+## V0.4 — Deep learning workflows
+
+- Editable test questions
+- Score recalculation from question points
+- One-click mistake creation from missed questions
+- Rich Notes with Markdown/equations/attachments
+- Cross-links between lessons, notes, tests, circuits, projects, and mistakes
+- Habit goals and history
+- Study-session edit/pause/resume
+
+## V0.5 — Engineering laboratory tools
+
+- Ohm's Law
+- Power/voltage/current/resistance calculators
+- Resistor color-code decoder
+- Unit conversion
+- Formula/reference library
+- Circuit problem generator
+- Flashcards and practice tests
+- Waveform utilities
+
+## V0.6 — Physical ↔ digital laboratory
+
+- QR component labels
+- Stock movement history
+- Project checkout/return
+- Low-stock alerts
+- Component photos/datasheets
+- Project BOM
+
+## V0.7 — Advanced analytics
+
+- Weekly/monthly study trends
+- Test score history
+- Mistake frequency and repeated-mistake detection
+- Requirement completion velocity
+- Project completion history
+- Inventory usage history
+- Immutable activity events
+
+## V1.0 — Engineering Operating System
+
+A mature release spans curriculum, learning feedback, physical inventory, projects, engineering tools, files, analytics, and the physical lab with verified persistence, security, backups, and browser-tested workflows.

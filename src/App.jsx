@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Activity, BookOpen, Boxes, CircuitBoard, GitBranch, GraduationCap, LayoutDashboard, Menu, NotebookPen, Paperclip, Plus, Settings, ShieldAlert, Sparkles, TestTube2, X, Zap, LogOut, UserRound, Wrench, CircleHelp } from 'lucide-react'
 import AuthScreen from './components/AuthScreen'

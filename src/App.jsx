@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Activity, BookOpen, Boxes, CircuitBoard, Gauge, GitBranch, GraduationCap, LayoutDashboard, Menu, NotebookPen, Plus, Settings, ShieldAlert, Sparkles, Target, TestTube2, X, Zap, LogOut, UserRound } from 'lucide-react'
 import AuthScreen from './components/AuthScreen'
 import DashboardPage from './pages/DashboardPage'
@@ -56,7 +56,9 @@ function ConfigNotice() {
 function AppShell({ user }) {
   const [open, setOpen] = useState(false)
   const [quick, setQuick] = useState(false)
-  const path = window.location.pathname
+  const location = useLocation()
+  const navigate = useNavigate()
+  const path = location.pathname
   const module = modules[path]
   const pageTitle = module?.[0] ?? 'Dashboard'
   const Icon = module?.[2] ?? LayoutDashboard

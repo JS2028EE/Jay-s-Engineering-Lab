@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { Activity, BookOpen, Boxes, CircuitBoard, GitBranch, GraduationCap, LayoutDashboard, Menu, NotebookPen, Paperclip, Plus, Settings, ShieldAlert, Sparkles, TestTube2, X, Zap, LogOut, UserRound } from 'lucide-react'
+import { Activity, BookOpen, Boxes, CircuitBoard, GitBranch, GraduationCap, LayoutDashboard, Menu, NotebookPen, Paperclip, Plus, Settings, ShieldAlert, Sparkles, TestTube2, X, Zap, LogOut, UserRound, Wrench, CircleHelp } from 'lucide-react'
 import AuthScreen from './components/AuthScreen'
 import DashboardPage from './pages/DashboardPage'
 import CurriculumPage from './pages/CurriculumPage'
@@ -16,6 +16,8 @@ import StudySessionsPage from './pages/StudySessionsPage'
 import ConnectionsPage from './pages/ConnectionsPage'
 import FilesPage from './pages/FilesPage'
 import SettingsPage from './pages/SettingsPage'
+import EngineeringToolsPage from './pages/EngineeringToolsPage'
+import GuidePage from './pages/GuidePage'
 import { supabase, supabaseConfigured } from './lib/supabase'
 import { getDashboardData } from './lib/data'
 
@@ -33,6 +35,8 @@ const nav = [
   ['/study-sessions', 'Study Sessions', BookOpen],
   ['/connections', 'Connections', GitBranch],
   ['/files', 'Files', Paperclip],
+  ['/tools', 'Engineering Tools', Wrench],
+  ['/guide', 'Lab Guide', CircleHelp],
 ]
 
 const modules = {
@@ -49,6 +53,8 @@ const modules = {
   '/connections': ['Connections', 'Build the engineering knowledge graph.', GitBranch],
   '/files': ['Files', 'Store private engineering artifacts.', Paperclip],
   '/settings': ['Settings', 'Protect, export, and manage your Lab system.', Settings],
+  '/tools': ['Engineering Tools', 'Calculators and reference utilities for real engineering work.', Wrench],
+  '/guide': ['Lab Guide', 'Learn how the Lab is organized and how the workflows connect.', CircleHelp],
 }
 
 function ConfigNotice() {
@@ -64,7 +70,14 @@ function AppShell({ user }) {
   const module = modules[path]
   const pageTitle = module?.[0] ?? 'Dashboard'
   const Icon = module?.[2] ?? LayoutDashboard
-  const status = useMemo(() => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), [])
+  const [status, setStatus] = useState(() => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+
+  useEffect(() => {
+    const updateClock = () => setStatus(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+    updateClock()
+    const clockTimer = window.setInterval(updateClock, 1000)
+    return () => window.clearInterval(clockTimer)
+  }, [])
 
   useEffect(() => {
     let mounted = true
@@ -126,7 +139,7 @@ function AppShell({ user }) {
     <main className="main">
       <header className="topbar"><button className="icon-btn menu-btn" onClick={() => setOpen(true)}><Menu size={20}/></button><div className="crumb"><span>ENGINEERING LAB</span><b>/</b><strong>{pageTitle.toUpperCase()}</strong></div><div className="top-actions"><span className="user-chip"><UserRound size={14}/>{user.email}</span><span className="clock mono">{status}</span><button className="icon-btn signout-btn" onClick={signOut} title="Sign out"><LogOut size={16}/></button><button className="quick-btn" onClick={() => setQuick(!quick)}><Plus size={17}/> QUICK ACTION</button></div></header>
       {quick && <div className="quick-panel">{quickItems.map(([href, label]) => <NavLink key={href} to={href} onClick={() => setQuick(false)}>{label}</NavLink>)}</div>}
-      {path === '/' ? <DashboardPage /> : path === '/curriculum' ? <CurriculumPage /> : path === '/projects' ? <ProjectsPage /> : path === '/notes' ? <NotesPage /> : path === '/tests' ? <TestsPage /> : path === '/circuits' ? <CircuitsPage /> : path === '/components' ? <ComponentsPage /> : path === '/mistakes' ? <MistakesPage /> : path === '/analytics' ? <AnalyticsPage /> : path === '/wellness' ? <WellnessPage /> : path === '/study-sessions' ? <StudySessionsPage /> : path === '/connections' ? <ConnectionsPage /> : path === '/files' ? <FilesPage /> : path === '/settings' ? <SettingsPage /> : <ModulePage title={pageTitle} Icon={Icon} description={module?.[1] ?? 'Engineering command center.'} />}
+      {path === '/' ? <DashboardPage /> : path === '/curriculum' ? <CurriculumPage /> : path === '/projects' ? <ProjectsPage /> : path === '/notes' ? <NotesPage /> : path === '/tests' ? <TestsPage /> : path === '/circuits' ? <CircuitsPage /> : path === '/components' ? <ComponentsPage /> : path === '/mistakes' ? <MistakesPage /> : path === '/analytics' ? <AnalyticsPage /> : path === '/wellness' ? <WellnessPage /> : path === '/study-sessions' ? <StudySessionsPage /> : path === '/connections' ? <ConnectionsPage /> : path === '/files' ? <FilesPage /> : path === '/tools' ? <EngineeringToolsPage /> : path === '/guide' ? <GuidePage /> : path === '/settings' ? <SettingsPage /> : <ModulePage title={pageTitle} Icon={Icon} description={module?.[1] ?? 'Engineering command center.'} />}
     </main>
   </div>
 }

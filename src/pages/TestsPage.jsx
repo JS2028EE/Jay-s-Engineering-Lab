@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { CheckCircle2, ChevronDown, ChevronRight, Loader2, Pencil, Plus, Save, TestTube2, Trash2, X } from 'lucide-react'
+import { CheckCircle2, ChevronDown, ChevronRight, Loader2, Pencil, Plus, Save, ShieldAlert, TestTube2, Trash2, X } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 const blank={name:'',subject_id:'',topic_id:'',score:'',max_score:'',test_date:'',difficulty:'medium',notes:''}
@@ -22,6 +22,7 @@ export default function TestsPage(){
   const [editingId,setEditingId]=useState(null)
   const [form,setForm]=useState(blank)
   const [questionForms,setQuestionForms]=useState({})
+  const [editingQuestionId,setEditingQuestionId]=useState(null)
   const [expanded,setExpanded]=useState({})
   const [loading,setLoading]=useState(true)
   const [saving,setSaving]=useState(false)
@@ -64,21 +65,61 @@ export default function TestsPage(){
   function openQuestion(testId){
     const test=tests.find(t=>t.id===testId)
     const next=(test?.test_questions?.length||0)+1
+    setEditingQuestionId(null)
     setQuestionForms(p=>({...p,[testId]:{...questionBlank,question_number:String(next)}}))
+  }
+
+  function editQuestion(testId,q){
+    setEditingQuestionId(q.id)
+    setQuestionForms(p=>({...p,[testId]:{question_number:String(q.question_number),question_text:q.question_text||'',user_answer:q.user_answer||'',correct_answer:q.correct_answer||'',points_earned:q.points_earned??'',points_possible:q.points_possible??''}}))
+  }
+
+  function cancelQuestion(testId){
+    setEditingQuestionId(null)
+    setQuestionForms(p=>{const n={...p};delete n[testId];return n})
   }
 
   async function saveQuestion(testId){
     const formQ=questionForms[testId];if(!formQ?.question_number)return
     setSaving(true);setError('')
-    const result=await supabase.from('test_questions').insert({
-      test_id:testId,question_number:Number(formQ.question_number),question_text:formQ.question_text.trim()||null,user_answer:formQ.user_answer.trim()||null,correct_answer:formQ.correct_answer.trim()||null,points_earned:formQ.points_earned===''?null:Number(formQ.points_earned),points_possible:formQ.points_possible===''?null:Number(formQ.points_possible)
-    })
+    const payload={test_id:testId,question_number:Number(formQ.question_number),question_text:formQ.question_text.trim()||null,user_answer:formQ.user_answer.trim()||null,correct_answer:formQ.correct_answer.trim()||null,points_earned:formQ.points_earned===''?null:Number(formQ.points_earned),points_possible:formQ.points_possible===''?null:Number(formQ.points_possible)}
+    const result=editingQuestionId
+      ? await supabase.from('test_questions').update(payload).eq('id',editingQuestionId)
+      : await supabase.from('test_questions').insert(payload)
     if(result.error)setError(result.error.message)
-    else{setQuestionForms(p=>{const n={...p};delete n[testId];return n});await refresh()}
+    else{cancelQuestion(testId);await refresh()}
     setSaving(false)
   }
 
   async function removeQuestion(id){const result=await supabase.from('test_questions').delete().eq('id',id);if(result.error)setError(result.error.message);else await refresh()}
+
+  async function recalculateScore(test){
+    const scored=(test.test_questions||[]).filter(q=>q.points_earned!=null&&q.points_possible!=null&&Number(q.points_possible)>0)
+    if(!scored.length){setError('Add earned and possible points to at least one question before recalculating.');return}
+    setSaving(true);setError('')
+    const score=scored.reduce((sum,q)=>sum+Number(q.points_earned),0)
+    const max=scored.reduce((sum,q)=>sum+Number(q.points_possible),0)
+    const result=await supabase.from('tests').update({score,max_score:max}).eq('id',test.id)
+    if(result.error)setError(result.error.message);else await refresh()
+    setSaving(false)
+  }
+
+  async function createMistakeFromQuestion(test,q){
+    setSaving(true);setError('')
+    const result=await supabase.from('mistakes').insert({
+      subject_id:test.subject_id||null,
+      topic_id:test.topic_id||null,
+      question:q.question_text||('Question '+q.question_number),
+      user_answer:q.user_answer||null,
+      correct_answer:q.correct_answer||null,
+      what_went_wrong:'Logged from '+test.name+' · Question '+q.question_number,
+      explanation:'Review this question and record the concept or reasoning that needs improvement.',
+      severity:'medium',
+      resolved:false
+    })
+    if(result.error)setError(result.error.message);else window.dispatchEvent(new Event('jel-record-created'))
+    setSaving(false)
+  }
 
   const average=useMemo(()=>{
     const scored=tests.map(percentage).filter(v=>v!=null)
@@ -119,14 +160,14 @@ export default function TestsPage(){
           return <article className="panel record-card" key={test.id}>
             <div className="record-card-head">
               <div><p className="eyebrow">ASSESSMENT</p><h2>{test.name}</h2><div className="record-meta">{test.subject_id&&<span>{subjectName(test.subject_id)}</span>}{test.topic_id&&<span>{topicName(test.topic_id)}</span>}<span>{test.test_date}</span></div></div>
-              <div className="record-actions"><button className="icon-btn" title="Edit test" onClick={()=>startEdit(test)}><Pencil size={14}/></button><button className="icon-btn danger-btn" onClick={()=>remove(test.id)}><Trash2 size={14}/></button></div>
+              <div className="record-actions">{test.test_questions?.some(q=>q.points_earned!=null&&q.points_possible!=null)?<button className="ghost compact-button" title="Recalculate score from question points" onClick={()=>recalculateScore(test)}>RECALC</button>:null}<button className="icon-btn" title="Edit test" onClick={()=>startEdit(test)}><Pencil size={14}/></button><button className="icon-btn danger-btn" onClick={()=>remove(test.id)}><Trash2 size={14}/></button></div>
             </div>
             <div className="metric-row">{pct==null?<span className="metric-muted">No score entered</span>:<><strong>{pct}%</strong><span>{test.score}/{test.max_score}</span><CheckCircle2 size={16}/></>}<span className="tag">{test.difficulty}</span><span>{test.test_questions?.length||0} questions</span></div>
             {test.notes&&<p className="record-content">{test.notes}</p>}
             <button className="secondary full section-toggle" onClick={()=>setExpanded(p=>({...p,[test.id]:!open}))}>{open?<ChevronDown size={14}/>:<ChevronRight size={14}/>} {open?'HIDE':'SHOW'} QUESTION BREAKDOWN</button>
             {open&&<div className="question-section">
-              {(test.test_questions||[]).map(q=><div className="question-row" key={q.id}><div><b>Q{q.question_number}</b><span>{q.question_text||'Question'}</span>{q.user_answer&&<small>Your answer: {q.user_answer}</small>}{q.correct_answer&&<small>Correct: {q.correct_answer}</small>}</div><span>{q.points_earned!=null&&q.points_possible!=null?q.points_earned+'/'+q.points_possible:(questionCorrect(q)?'✓':'—')}</span><button className="icon-btn danger-btn" onClick={()=>removeQuestion(q.id)}><Trash2 size={12}/></button></div>)}
-              {qForm?<div className="question-form"><label><span>#</span><input type="number" min="1" value={qForm.question_number} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],question_number:e.target.value}}))}/></label><label><span>Question</span><textarea rows="2" value={qForm.question_text} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],question_text:e.target.value}}))}/></label><label><span>Your Answer</span><input value={qForm.user_answer} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],user_answer:e.target.value}}))}/></label><label><span>Correct Answer</span><input value={qForm.correct_answer} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],correct_answer:e.target.value}}))}/></label><label><span>Earned</span><input type="number" min="0" step="any" value={qForm.points_earned} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],points_earned:e.target.value}}))}/></label><label><span>Possible</span><input type="number" min="0" step="any" value={qForm.points_possible} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],points_possible:e.target.value}}))}/></label><div><button className="primary" onClick={()=>saveQuestion(test.id)} disabled={saving}><Save size={14}/> SAVE QUESTION</button><button className="ghost" onClick={()=>setQuestionForms(p=>{const n={...p};delete n[test.id];return n})}>CANCEL</button></div></div>:<button className="secondary add-task-button" onClick={()=>openQuestion(test.id)}><Plus size={14}/> ADD QUESTION</button>}
+              {(test.test_questions||[]).map(q=><div className="question-row" key={q.id}><div><b>Q{q.question_number}</b><span>{q.question_text||'Question'}</span>{q.user_answer&&<small>Your answer: {q.user_answer}</small>}{q.correct_answer&&<small>Correct: {q.correct_answer}</small>}</div><span>{q.points_earned!=null&&q.points_possible!=null?q.points_earned+'/'+q.points_possible:(questionCorrect(q)?'✓':'—')}</span><div className="question-actions"><button className="icon-btn" title="Edit question" onClick={()=>editQuestion(test.id,q)}><Pencil size={12}/></button>{q.points_earned!=null&&q.points_possible!=null&&Number(q.points_earned)<Number(q.points_possible)?<button className="icon-btn" title="Log as mistake" onClick={()=>createMistakeFromQuestion(test,q)}><ShieldAlert size={12}/></button>:null}<button className="icon-btn danger-btn" title="Delete question" onClick={()=>removeQuestion(q.id)}><Trash2 size={12}/></button></div></div>)}
+              {qForm?<div className="question-form"><label><span>#</span><input type="number" min="1" value={qForm.question_number} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],question_number:e.target.value}}))}/></label><label><span>Question</span><textarea rows="2" value={qForm.question_text} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],question_text:e.target.value}}))}/></label><label><span>Your Answer</span><input value={qForm.user_answer} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],user_answer:e.target.value}}))}/></label><label><span>Correct Answer</span><input value={qForm.correct_answer} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],correct_answer:e.target.value}}))}/></label><label><span>Earned</span><input type="number" min="0" step="any" value={qForm.points_earned} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],points_earned:e.target.value}}))}/></label><label><span>Possible</span><input type="number" min="0" step="any" value={qForm.points_possible} onChange={e=>setQuestionForms(p=>({...p,[test.id]:{...p[test.id],points_possible:e.target.value}}))}/></label><div><button className="primary" onClick={()=>saveQuestion(test.id)} disabled={saving}><Save size={14}/> {editingQuestionId?'UPDATE':'SAVE'} QUESTION</button><button className="ghost" onClick={()=>cancelQuestion(test.id)}>CANCEL</button></div></div>:<button className="secondary add-task-button" onClick={()=>openQuestion(test.id)}><Plus size={14}/> ADD QUESTION</button>}
             </div>}
           </article>
         })}

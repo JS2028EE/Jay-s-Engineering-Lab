@@ -1,8 +1,10 @@
 # Jay's Engineering Lab — Roadmap
 
-This roadmap separates what is working now from what still needs to be built.
+This roadmap separates the core personal lab system from optional deeper capabilities.
 
-## CURRENT — V0.3 connected foundation
+## CURRENT — V0.3.1 near-final foundation
+
+The core personal engineering workspace is now the target release line.
 
 ### Working workspaces
 
@@ -20,12 +22,15 @@ This roadmap separates what is working now from what still needs to be built.
 - Connections / Knowledge Graph
 - Files
 - Settings / Data Export
+- Engineering Tools
+- Lab Guide
 
 ### Working data principles
 
 - Supabase persistence
 - Authenticated user access
-- RLS-protected data
+- RLS-protected user-owned data
+- Private Storage for uploaded files
 - Curriculum progress calculation
 - Core Load calculation
 - Test percentage calculation
@@ -33,167 +38,109 @@ This roadmap separates what is working now from what still needs to be built.
 - Project task progress
 - Mistake resolution state
 - Inventory quantity totals
+- Controlled cross-entity relationships
+- Deterministic engineering-tool calculations
 
-## NEXT — V0.4 deep learning workflows
+### Near-final release gate
 
-Most of the original CRUD foundation is implemented. V0.4 should focus on deeper editing, richer attachments, cross-links, and study workflows rather than rebuilding the core lifecycle.
+The core release is considered near-final when these are all true:
 
-The major CRUD lifecycle is already implemented across the current V0.3 workspaces. The next work should deepen those workflows rather than rebuild their basic CRUD.
+- GitHub Actions automated tests pass.
+- Production Vite build passes.
+- Dependency security audit passes.
+- Authentication and production email confirmation work.
+- Core CRUD workflows survive refresh.
+- RLS/Storage isolation is verified.
+- Data export works.
+- Major UI paths have loading, empty, and error states.
+- Production deployment is successfully verified.
+- Remaining Auth hardening settings are reviewed.
+
+The system does not need every advanced feature below to be useful as a complete personal engineering lab.
+
+## V0.4 — Depth and polish
+
+Optional post-core expansion:
 
 ### Notes
-
-Deepen:
-
-- rich text / Markdown
+- Markdown/rich formatting
 - equations
 - tags
-- images and files
-- linked mistakes, tests, circuits, and projects
+- broader file/image attachments
+- linked engineering records
 
 ### Tests
-
-Deepen:
-
 - retakes
-- richer score history
-- broader review workflows
+- score history
+- review workflows
 
 ### Circuits
-
-Deepen:
-
-- schematic upload
-- image preview
+- schematic preview
 - measured vs expected comparison
+- richer engineering evidence fields
 
 ### Components
-
-Deepen:
-
 - component photos
-- datasheets
-- quantity adjustments
-- stock history
+- stock movement history
+- low-stock warnings
 
 ### Mistakes
-
-Deepen:
-
-- recurring-mistake detection
-- richer cross-linking
+- repeated-topic analysis
+- stronger cross-linking
 
 ### Wellness
-
-Deepen:
-
 - goal history
-- date history
-- weekly/monthly views
-- consistency calendar
+- calendar views
+- longer-term consistency trends
 
 ### Study Sessions
-
-Deepen:
-
 - edit
 - pause/resume
-- weekly study graphs
+- richer weekly history
 
-## V0.5 — Connect and deepen the system
+## V0.5+ — Connected entity experiences
 
-The next major goal is to make the modules communicate.
+Deeper entity detail pages can surface:
 
-### Curriculum connections
-
-Each lesson should be able to show:
-
-- notes
+- related notes
 - tests
 - mistakes
 - circuits
 - projects
+- components
 - study sessions
+- relationship history
 
-### Project connections
+## V0.6+ — Interactive knowledge graph
 
-Each project should show:
+Use the existing relationships table to build a visual graph of engineering concepts and artifacts.
 
-- components used
-- circuits
-- notes
-- tests
-- mistakes
-- project tasks
-- activity history
+## V0.7+ — Storage depth
 
-### Component connections
+Expand private file handling with:
 
-A component should be able to answer:
+- richer metadata
+- attachment references across workspaces
+- backup manifests
+- media previews
 
-- Where is it physically?
-- Which projects use it?
-- Which circuits use it?
-- How many are left?
+## V0.8+ — Advanced analytics
 
-## V0.6 — Knowledge graph
+Expand analytics with:
 
-Implement the existing `relationships` table.
-
-Provide a controlled relationship system such as:
-
-```
-related_to
-explained_by
-appears_in
-caused
-uses
-tested_by
-built_with
-derived_from
-```
-
-Then build an interactive engineering knowledge graph.
-
-## V0.7 — Files and storage
-
-Add real Supabase Storage integration.
-
-Supported artifacts:
-
-- PDFs
-- datasheets
-- schematics
-- images
-- project photos
-- videos or video links
-- code files
-
-Database records should store metadata and storage paths.
-
-## V0.8 — Advanced analytics
-
-Add:
-
-- study hours by week
-- test score trends
-- mistake frequency by topic
-- subject mastery history
+- weekly study history
+- score trends
+- mistake frequency
+- mastery history
 - project completion history
-- component acquisition history
+- inventory history
 - engineering activity timeline
-- requirement completion velocity
 - repeated-mistake analysis
 
-Analytics should always clearly identify the underlying data source.
+## V0.9+ — Advanced engineering toolchain
 
-## V0.9 — Real engineering tools
+Potential additions:
 
-Long-term:
-
-- engineering calculator
-- Ohm's Law calculator
-- resistor/color-code tools
-- unit converter
 - formula library
 - circuit problem generator
 - flashcards
@@ -201,69 +148,40 @@ Long-term:
 - waveform tools
 - electronics reference tables
 
-## V1.0 — Circuit laboratory
+## V1.0+ — Circuit laboratory
 
 Long-term advanced system:
 
 - drag-and-drop circuit editor
-- wires
+- wires and nodes
 - component symbols
-- value entry
-- node labels
-- voltage/current calculations
 - SPICE integration
 - waveform visualization
-- simulated oscilloscope
-- animated current flow
+- simulated instrumentation
 
 ## Post-V1.0 — Physical lab integration
 
-Long-term physical-digital bridge:
+Potential physical-digital bridge:
 
 - QR labels
 - component drawer codes
-- QR scan
-- instant component lookup
-- stock adjustments
-- project checkout/return
+- QR scanning
+- stock checkout/return
 - low-stock alerts
-
-## Reliability gate
-
-Before calling the system mature:
-
-- loading states
-- empty states
-- error recovery
-- form validation
-- optimistic updates where appropriate
-- retry handling
-- automated tests
-- production smoke tests
-- mobile layout audit
-- accessibility audit
-- data export
-- backup strategy
 
 ## Future intelligent layer
 
-Only after the underlying data is reliable:
+Only after the underlying data is stable:
 
-- AI engineering search
-- AI note summarization
+- engineering search
+- note summarization
 - mistake explanations
-- study recommendations
 - automatic tagging
 - related-concept discovery
-- natural-language queries across the lab
+- natural-language queries
 
 AI should assist with the data, not become the source of truth.
 
 ## Definition of complete
 
-A module is considered complete only when it supports the full lifecycle:
-
-`Create → Read → Edit → Delete → Relate → Analyze`
-
-and when the relevant dashboard/analytics values automatically respond to the data.
-
+A core module is considered complete when its actual lifecycle matches the functionality it advertises, data survives refresh, permissions are enforced at the database layer, errors are recoverable, and relevant metrics derive from source records.

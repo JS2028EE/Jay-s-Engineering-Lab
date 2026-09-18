@@ -460,3 +460,25 @@ This applies across the application, including Engineering Tools resistor band s
 ### Result
 
 Create/add, edit, delete, number-entry, and color-selection controls remain readable without requiring hover.
+
+
+## 26. Engineering repository quality layer
+
+The project moved beyond application hardening into explicit engineering-process documentation.
+
+Added:
+
+- `docs/ENGINEERING_STANDARDS.md`
+- `docs/VERIFICATION.md`
+- `docs/DATA_DICTIONARY.md`
+- `CONTRIBUTING.md`
+- `.editorconfig`
+- GitHub pull-request template
+- GitHub bug-report template
+- GitHub feature-request template
+
+The standards establish evidence levels, unit discipline, reproducible calculations, measurement integrity, tolerance/uncertainty awareness, component documentation, data integrity, safety-boundary notes, and change verification.
+
+The verification matrix separates automated build evidence from manual browser verification so a successful compilation is never mistaken for complete product verification.
+
+A direct production PostgreSQL check also confirmed RLS is enabled on every current application table in the exposed `public` schema.

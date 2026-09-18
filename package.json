@@ -22,7 +22,7 @@
     "recharts": "^3.2.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.0.2",
+    "@vitejs/plugin-react": "^6.1.1",
     "vite": "^7.1.6"
   },
   "engines": {

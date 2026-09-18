@@ -16,6 +16,8 @@ All notable changes to Jay's Engineering Lab are documented here.
 - Engineering Tools no longer infers the desired core quantity from whichever two fields happen to be filled.
 - Calculator inputs now show the exact quantity and units required by the selected method.
 - Engineering math coverage expanded with deterministic tests for the new calculators and unit groups.
+- Fixed Study Session stopping by adding the missing `updated_at` schema field required by the existing timestamp trigger.
+- Added a production-verified migration for the Study Session timestamp fix.
 
 
 ## 0.3.1 — 2026-09-18

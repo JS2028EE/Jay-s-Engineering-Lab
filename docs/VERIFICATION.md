@@ -11,7 +11,7 @@ This matrix records what is currently verified, what is automated, and what stil
 | Area | Current status | Evidence |
 |---|---|---|
 | GitHub source on main | Verified | Repository source |
-| Deterministic engineering unit tests | Added / locally verified | 9 automated tests passed locally on 2026-09-18 |
+| Deterministic engineering unit tests | Added / locally verified | 14 automated tests passed locally on 2026-09-18 |
 | Vite production build | Verified on prior release commits | GitHub Actions CI |
 | Node baseline | Verified | .nvmrc = 22; CI uses Node 22 |
 | Dependency security audit | Added to CI | npm audit high-severity gate |
@@ -67,7 +67,7 @@ The current suite covers:
 
 Local verification on 2026-09-18:
 
-9 tests passed.
+14 tests passed.
 
 ## Direct production database verification
 

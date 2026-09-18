@@ -362,3 +362,15 @@ Generic graph rows are protected by database-level ownership checks. A graph rel
 
 ### Delivery verification
 GitHub Actions runs the Vite production build on pushes and pull requests to `main`. Vercel remains the production deployment path. The production commit must be checked independently from GitHub source state.
+
+
+## Engineering quality layer
+
+The repository now includes explicit engineering standards and verification records.
+
+- `docs/ENGINEERING_STANDARDS.md` defines evidence levels, units, calculations, measurement records, tolerances, component documentation, and data-integrity rules.
+- `docs/DATA_DICTIONARY.md` maps the database entities and derived metrics.
+- `docs/VERIFICATION.md` records automated versus manual verification and the release evidence required for meaningful changes.
+- `docs/MAINTENANCE.md` defines backup, security, deployment, and recovery procedures.
+
+These documents complement the implementation. They do not replace the SQL migration history or database policies.

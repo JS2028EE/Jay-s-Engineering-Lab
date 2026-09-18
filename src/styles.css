@@ -256,3 +256,5 @@
 .guide-rule{margin-top:12px}
 @media(max-width:900px){.tool-grid,.guide-grid{grid-template-columns:1fr}.tool-input-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.tool-input-grid,.resistor-grid{grid-template-columns:1fr}.tool-result{align-items:flex-start;flex-direction:column}.guide-card{padding:13px}}
+
+.question-actions{display:flex;align-items:center;gap:4px;justify-content:flex-end}.compact-button{font:8px monospace;letter-spacing:.08em;padding:6px 8px}@media(max-width:760px){.question-row{grid-template-columns:1fr auto}.question-actions{grid-column:1/-1;justify-content:flex-start}}

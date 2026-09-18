@@ -89,7 +89,10 @@ test('rejects cross-dimensional electrical conversion', () => {
 
 test('exposes expanded grouped electrical units', () => {
   const groups = getElectricalUnitGroups()
-  assert.deepEqual(groups.Resistance, ['Ω', 'kΩ', 'MΩ'])
+  assert.deepEqual(groups.Resistance, ['mΩ', 'Ω', 'kΩ', 'MΩ'])
+  assert.deepEqual(groups.Power, ['uW', 'mW', 'W', 'kW'])
+  assert.deepEqual(groups.Voltage, ['V', 'mV', 'uV', 'kV'])
+  assert.deepEqual(groups.Current, ['A', 'mA', 'uA', 'nA'])
   assert.deepEqual(groups.Frequency, ['Hz', 'kHz', 'MHz', 'GHz'])
   assert.deepEqual(groups.Inductance, ['H', 'mH', 'uH', 'nH'])
   assert.deepEqual(groups.Capacitance, ['F', 'mF', 'uF', 'nF', 'pF'])

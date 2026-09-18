@@ -73,7 +73,7 @@ export default function AuthScreen() {
           </label>
           <label>
             <span>Password</span>
-            <div className="auth-input"><LockKeyhole size={16} /><input type="password" autoComplete={isSignUp ? 'new-password' : 'current-password'} value={password} onChange={(event) => setPassword(event.target.value)} placeholder="••••••••" minLength={6} required /></div>
+            <div className="auth-input"><LockKeyhole size={16} /><input type="password" autoComplete={isSignUp ? 'new-password' : 'current-password'} value={password} onChange={(event) => setPassword(event.target.value)} placeholder="••••••••" minLength={isSignUp ? 8 : undefined} required /></div>
           </label>
 
           {error && <div className="auth-message error">{error}</div>}

@@ -38,92 +38,65 @@ This roadmap separates what is working now from what still needs to be built.
 
 Most of the original CRUD foundation is implemented. V0.4 should focus on deeper editing, richer attachments, cross-links, and study workflows rather than rebuilding the core lifecycle.
 
-The current modules need full lifecycle support, not only create/delete.
+The major CRUD lifecycle is already implemented across the current V0.3 workspaces. The next work should deepen those workflows rather than rebuild their basic CRUD.
 
 ### Notes
 
-Add:
+Deepen:
 
-- edit
 - rich text / Markdown
-- subject + topic selection
+- equations
 - tags
 - images and files
 - linked mistakes, tests, circuits, and projects
 
 ### Tests
 
-Add:
+Deepen:
 
-- test questions
-- missed-question tracking
-- per-question scores
 - retakes
-- subject/topic links
-- automatic mistake creation
-- score history
+- richer score history
+- broader review workflows
 
 ### Circuits
 
-Add:
+Deepen:
 
 - schematic upload
-- component selection
-- circuit-component linking
-- subject/topic links
-- edit
 - image preview
 - measured vs expected comparison
 
 ### Components
 
-Add:
+Deepen:
 
-- edit
-- dedicated physical locations
-- location management
 - component photos
 - datasheets
-- project links
-- circuit links
 - quantity adjustments
+- stock history
 
 ### Mistakes
 
-Add:
+Deepen:
 
-- subject/topic
-- related test
-- related circuit
-- related note
 - recurring-mistake detection
-- edit
+- richer cross-linking
 
 ### Wellness
 
-Add:
+Deepen:
 
-- edit categories
-- edit habits
-- measurements
-- goals
+- goal history
 - date history
 - weekly/monthly views
-- streaks
 - consistency calendar
 
 ### Study Sessions
 
-This is a major missing CRUD surface.
+Deepen:
 
-Add:
-
-- session creation
-- timer
-- manual duration entry
-- subject/topic
-- summary
-- history
+- edit
+- pause/resume
 - weekly study graphs
 
 ## V0.5 — Connect and deepen the system

@@ -228,3 +228,31 @@
   .location-row small{grid-column:1/-2}
   .question-form{grid-template-columns:1fr}
 }
+
+
+.tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tool-card{padding:16px}
+.tool-head{display:flex;align-items:center;gap:11px;margin-bottom:9px}
+.tool-head .module-icon{width:38px;height:38px}
+.tool-head h2{margin:0;font-size:16px}
+.tool-description,.tool-note p{font-size:10px;line-height:1.7;color:#71849d;margin:0 0 13px}
+.tool-input-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tool-input-grid label{display:block}
+.tool-input-grid label>span{display:block;font:8px monospace;letter-spacing:.08em;color:#61758f;text-transform:uppercase;margin-bottom:5px}
+.tool-input-grid input,.tool-input-grid select{width:100%;border:1px solid var(--line);outline:none;background:rgba(255,255,255,.025);color:var(--text);padding:9px;font:10px inherit}
+.tool-input-grid input:focus,.tool-input-grid select:focus{border-color:rgba(76,230,255,.45);box-shadow:0 12px 28px rgba(76,230,255,.05)}
+.tool-result{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid rgba(76,230,255,.14);background:rgba(76,230,255,.035);padding:11px 12px;margin-top:11px}
+.tool-result span{font:8px monospace;letter-spacing:.1em;color:#60738d}
+.tool-result strong{font:17px monospace;color:var(--cyan);text-align:right}
+.tool-formula{font:9px monospace;color:#586d88;margin:10px 0 0}
+.resistor-grid{grid-template-columns:repeat(3,1fr)}
+.tool-note{display:flex;gap:11px;align-items:flex-start;margin-top:12px;color:#86a0ba}
+.tool-note>b,.tool-note p{margin:0}
+.guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.guide-card{padding:16px;display:flex;gap:12px;align-items:flex-start}
+.guide-icon{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border:1px solid rgba(76,230,255,.16);background:rgba(76,230,255,.035);color:var(--cyan)}
+.guide-card h2{margin:0 0 7px;font-size:15px}
+.guide-card p{margin:0;color:#778ba6;font-size:10px;line-height:1.7}
+.guide-rule{margin-top:12px}
+@media(max-width:900px){.tool-grid,.guide-grid{grid-template-columns:1fr}.tool-input-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.tool-input-grid,.resistor-grid{grid-template-columns:1fr}.tool-result{align-items:flex-start;flex-direction:column}.guide-card{padding:13px}}

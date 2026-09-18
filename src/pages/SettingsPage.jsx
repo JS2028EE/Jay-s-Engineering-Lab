@@ -25,7 +25,7 @@ export default function SettingsPage() {
         if (result.error) throw result.error
         data[table] = result.data || []
       }
-      const payload = { exported_at:new Date().toISOString(), version:'0.2', data }
+      const payload = { exported_at:new Date().toISOString(), version:'0.3.1', data }
       const blob = new Blob([JSON.stringify(payload,null,2)], { type:'application/json' })
       const url = URL.createObjectURL(blob)
       const anchor = document.createElement('a')

@@ -277,3 +277,84 @@ It is no longer only a visual prototype.
 It is now a cloud-backed engineering data system with real CRUD foundations and calculated metrics.
 
 The next phase is about making every module deeper, more connected, editable, testable, and useful for long-term engineering work.
+
+
+## 17. V0.2 expansion
+
+After the initial functional foundation, the project was expanded in one major pass rather than stopping at the basic CRUD layer.
+
+New functionality added:
+
+- Study Session timer and manual session entry
+- Editable linked Notes
+- Editable Tests
+- Test question tracking
+- Editable Components
+- Physical component Locations
+- Editable Circuits
+- Circuit → Component relationships
+- Editable Projects
+- Project → Component relationships
+- Editable Mistakes with subject/topic context
+- Editable Wellness habits
+- Wellness measurements
+- Wellness streaks
+- Wellness consistency calculations
+- Knowledge Graph / Connections workspace
+- Private Files workspace
+- Data export / backup in Settings
+- Global UI Error Boundary
+- Shared recent-activity analytics
+- Weekly study telemetry
+- Test trend data
+- Centralized dashboard/analytics calculations
+
+This phase reinforced the rule that every major record needs a complete lifecycle and that related records should be connected through explicit foreign-key/link tables rather than duplicated text.
+
+## 18. V0.2 infrastructure hardening
+
+A second SQL migration was added:
+
+`supabase/migrations/002_system_hardening_storage.sql`
+
+It adds:
+
+- automatic `updated_at` triggers
+- indexes for common time-series/relationship queries
+- a private Supabase Storage bucket for engineering files
+- Storage policies scoped to each authenticated user's UUID folder
+- explicit access to the database file metadata table
+
+The migration is intentionally separate from the original V0.1 migration so the schema history remains understandable.
+
+## 19. Current deployment lesson
+
+The production application is deployed through GitHub → Vercel.
+
+During rapid feature expansion, failed Vercel deployments caused the production site to continue serving an earlier successful version. This reinforced another permanent rule:
+
+> Always verify the deployment status of the exact Git commit being tested.
+
+A successful GitHub commit and a successful production deployment are separate states.
+
+## 20. Current V0.2 design direction
+
+The project is now moving from a set of cloud CRUD pages toward a connected personal engineering operating system.
+
+The central architecture is:
+
+```
+Curriculum
+   ↕
+Notes ↔ Tests ↔ Mistakes
+   ↕       ↕       ↕
+Circuits ↔ Projects ↔ Components
+   ↕
+Knowledge Connections
+   ↕
+Analytics
+```
+
+Study Sessions provide a time dimension across learning activity.
+
+Wellness remains an intentionally separate subsystem.

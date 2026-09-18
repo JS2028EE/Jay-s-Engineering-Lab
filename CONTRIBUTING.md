@@ -1,111 +1,114 @@
 # Contributing to Jay's Engineering Lab
 
-Jay's Engineering Lab is primarily a personal engineering system, but its repository follows normal software-engineering discipline.
+Jay's Engineering Lab is a personal engineering system, but it is maintained using disciplined software and engineering practices.
 
 ## Before changing code
 
 Read:
 
-- `README.md`
-- `docs/ARCHITECTURE.md`
-- `docs/ENGINEERING_STANDARDS.md`
-- `docs/MAINTENANCE.md`
-- `SECURITY.md`
+- README.md
+- docs/ARCHITECTURE.md
+- docs/ENGINEERING_STANDARDS.md
+- docs/DATA_DICTIONARY.md
+- docs/VERIFICATION.md
+- docs/MAINTENANCE.md
 
-For database changes, also inspect the migration history in `supabase/migrations/`.
+Understand whether the change is application logic, data model, security policy, documentation, or infrastructure.
 
-## Development
+## Development baseline
 
-Use Node 22 as the project baseline.
+- Node 22
+- React + Vite
+- Supabase/PostgreSQL
+- JavaScript / JSX
+- 2-space indentation
+- UTF-8
+- LF line endings
 
-Typical workflow:
+## Quality gate
 
-`npm install`
+Before treating a change as complete:
 
-`npm run dev`
+1. npm test
+2. npm run check
+3. npm run audit
+4. inspect changed files
+5. verify behavior where browser access is available
+6. document security/data/deployment impact
 
-For the production build:
+The GitHub Actions workflow runs the same automated test/build/audit gate on pushes to main and pull requests.
 
-`npm run check`
+## Database changes
 
-## Change rules
+Database changes must:
 
-Prefer small, understandable changes.
-
-Keep:
-
-- source-of-truth data in Supabase/PostgreSQL
-- ownership enforcement in RLS/database policies
-- browser credentials limited to publishable Supabase credentials
-- engineering calculations explicit and unit-aware
-- documentation synchronized with implementation
-
-Do not add fake data merely to make a screen look complete.
-
-## Database migrations
-
-Schema changes must be represented by a migration under:
-
-`supabase/migrations/`
-
-Never edit an old migration to change already-deployed history.
-
-Use a new descriptive migration for new schema changes.
+- preserve user ownership rules
+- keep RLS enabled on exposed application tables
+- use authenticated ownership checks
+- include WITH CHECK for update/insert authorization where appropriate
+- protect child records through parent ownership
+- avoid unnecessary SECURITY DEFINER functions
+- remove PUBLIC execute access from internal helper functions
+- add indexes for important ownership/foreign-key paths
+- be recorded as append-only Supabase migrations
 
 After database changes:
 
-1. verify the migration
-2. run Supabase advisors
-3. inspect affected RLS policies
-4. confirm frontend behavior
-5. update the architecture/build documentation
+- review Supabase security advisors
+- verify RLS and policy behavior
+- update the data dictionary
+- update verification documentation
+- record the production evidence
 
-## UI features
+## UI feature completeness
 
-A UI control is considered complete only when it has a real action behind it.
+Do not mark a feature complete because a button or page exists.
 
-Examples:
+A meaningful feature needs:
 
-- Create must persist.
-- Edit must update.
-- Delete must delete.
-- A progress display must derive from source data.
-- A dropdown must have visible readable values.
-- A loading state must not pretend data exists.
+Create → Read → Edit/Delete → Refresh persistence → Error handling → Permission enforcement
 
-## Commit discipline
+Where applicable, it should also relate to the rest of the Engineering Lab and feed derived metrics.
 
-Prefer descriptive commit messages:
+## Engineering evidence
 
-- `feat: add ...`
-- `fix: ...`
-- `security: ...`
-- `docs: ...`
-- `refactor: ...`
-- `test: ...`
+Engineering calculations should be recorded as:
 
-## Verification
+Equation → Substitution → Units → Result
 
-Before calling a change complete:
+Distinguish theoretical, simulated, measured, observed, and derived values.
 
-`Build → Inspect → Verify → Document`
+Never present simulated or calculated telemetry as a physical measurement.
 
-For changes touching authentication, RLS, Storage, or migrations, perform the applicable security review.
+## Change discipline
 
-## Documentation rule
+Prefer small, coherent changes.
 
-Historical documentation should remain historical. Do not rewrite old failures as though they never happened.
+Batch related changes before pushing when possible so CI and deployment history remains understandable and Vercel deployment limits are not consumed by unnecessary pushes.
 
-Update current-status documents when the implementation changes.
+Commit messages should describe the change clearly, for example:
 
-## Engineering record rule
+- feat: add component stock history
+- fix: prevent duplicate project links
+- security: harden ownership policy
+- test: cover resistor decoder edge cases
+- docs: record production verification
 
-When documenting an engineering result, distinguish:
+## Pull requests
 
-- theoretical
-- simulated
-- measured
-- observed
-- derived
+The pull-request template requires:
 
-Do not invent measured values.
+- change summary
+- verification evidence
+- data/security impact
+- engineering evidence
+- notes about known limitations
+
+## Reporting problems
+
+Use the GitHub issue templates for:
+
+- bug reports
+- feature requests
+
+Do not publish credentials, tokens, passwords, or private personal data in an issue.

@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 22
       - name: Install
-        run: npm install
+        run: npm ci
       - name: Automated tests and production build
         run: npm run check
       - name: Dependency security audit

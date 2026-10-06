@@ -162,8 +162,10 @@ export default function App() {
     }
 
     let mounted = true
-    supabase.auth.getSession().then(({ data }) => {
-      if (mounted) setSession(data.session)
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (mounted) setSession(error ? null : data.session)
+    }).catch(() => {
+      if (mounted) setSession(null)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {

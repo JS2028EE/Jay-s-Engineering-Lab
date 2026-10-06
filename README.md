@@ -75,3 +75,9 @@ The current remaining Supabase Security Advisor warning is leaked-password prote
 ## License
 
 MIT — see LICENSE.
+
+## Maintenance verification
+
+Dashboard queries and JSON exports now paginate through all accessible rows instead of deriving totals from fixed record limits or a single API page. Pages use deterministic ordering; failed pages abort the operation instead of producing a partial export. A session lookup failure now returns to sign-in instead of leaving the boot screen indefinitely.
+
+Automated tests cover multi-page data retrieval and query errors alongside the existing engineering calculations. Database migrations and historical verification records are preserved. Live authentication, RLS, Storage, and production deployment require separate verification in the configured environment.

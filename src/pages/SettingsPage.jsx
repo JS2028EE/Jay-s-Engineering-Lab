@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Download, Loader2, Settings, ShieldCheck } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { fetchAllRows } from '../lib/pagination'
 
 const tables = [
   'subjects','units','lessons','lesson_requirements','topics','notes','tests','test_questions',
@@ -21,9 +22,7 @@ export default function SettingsPage() {
     try {
       const data = {}
       for (const table of tables) {
-        const result = await supabase.from(table).select('*')
-        if (result.error) throw result.error
-        data[table] = result.data || []
+        data[table] = await fetchAllRows(() => supabase.from(table).select('*').order('id'))
       }
       const payload = { exported_at:new Date().toISOString(), version:'0.3.1', data }
       const blob = new Blob([JSON.stringify(payload,null,2)], { type:'application/json' })

@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import { fetchAllRows } from './pagination'
 
 function round(value, decimals=0){
   const factor=10**decimals
@@ -49,30 +50,28 @@ function buildRecentActivity({notes,tests,circuits,components,projects,mistakes,
 
 export async function getDashboardData(){
   const results=await Promise.all([
-    supabase.from('subject_progress').select('id,name,unit_count,progress').order('name'),
-    supabase.from('lesson_progress').select('id,unit_id,requirement_count,completed_count,progress'),
-    supabase.from('lesson_requirements').select('id,lesson_id,completed,completed_at,created_at'),
-    supabase.from('notes').select('id,title,created_at,updated_at').order('updated_at',{ascending:false}).limit(20),
-    supabase.from('tests').select('id,name,score,max_score,test_date,created_at').order('test_date',{ascending:false}).limit(20),
-    supabase.from('circuits').select('id,name,created_at').order('created_at',{ascending:false}).limit(20),
-    supabase.from('components').select('id,name,quantity,created_at').order('created_at',{ascending:false}).limit(100),
-    supabase.from('projects').select('id,name,status,created_at').order('created_at',{ascending:false}).limit(50),
-    supabase.from('mistakes').select('id,question,resolved,created_at').order('created_at',{ascending:false}).limit(50),
-    supabase.from('study_sessions').select('id,started_at,ended_at,duration_minutes,summary').order('started_at',{ascending:false}).limit(100),
+    fetchAllRows(() => supabase.from('subject_progress').select('id,name,unit_count,progress').order('name').order('id')),
+    fetchAllRows(() => supabase.from('lesson_progress').select('id,unit_id,requirement_count,completed_count,progress').order('id')),
+    fetchAllRows(() => supabase.from('lesson_requirements').select('id,lesson_id,completed,completed_at,created_at').order('id')),
+    fetchAllRows(() => supabase.from('notes').select('id,title,created_at,updated_at').order('updated_at',{ascending:false}).order('id')),
+    fetchAllRows(() => supabase.from('tests').select('id,name,score,max_score,test_date,created_at').order('test_date',{ascending:false}).order('id')),
+    fetchAllRows(() => supabase.from('circuits').select('id,name,created_at').order('created_at',{ascending:false}).order('id')),
+    fetchAllRows(() => supabase.from('components').select('id,name,quantity,created_at').order('created_at',{ascending:false}).order('id')),
+    fetchAllRows(() => supabase.from('projects').select('id,name,status,created_at').order('created_at',{ascending:false}).order('id')),
+    fetchAllRows(() => supabase.from('mistakes').select('id,question,resolved,created_at').order('created_at',{ascending:false}).order('id')),
+    fetchAllRows(() => supabase.from('study_sessions').select('id,started_at,ended_at,duration_minutes,summary').order('started_at',{ascending:false}).order('id')),
   ])
-  const firstError=results.map(item=>item.error).find(Boolean)
-  if(firstError)throw firstError
 
-  const subjects=results[0].data||[]
-  const lessons=results[1].data||[]
-  const requirements=results[2].data||[]
-  const notes=results[3].data||[]
-  const tests=results[4].data||[]
-  const circuits=results[5].data||[]
-  const components=results[6].data||[]
-  const projects=results[7].data||[]
-  const mistakes=results[8].data||[]
-  const study=results[9].data||[]
+  const subjects=results[0]
+  const lessons=results[1]
+  const requirements=results[2]
+  const notes=results[3]
+  const tests=results[4]
+  const circuits=results[5]
+  const components=results[6]
+  const projects=results[7]
+  const mistakes=results[8]
+  const study=results[9]
 
   const totalRequirements=requirements.length
   const completedRequirements=requirements.filter(item=>item.completed).length

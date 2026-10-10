@@ -16,15 +16,44 @@ const RESISTOR_TOLERANCES = { Brown: 1, Red: 2, Gold: 5, Silver: 10 }
 const ELECTRICAL_UNITS = {
   V: { group: 'Voltage', factor: 1 },
   mV: { group: 'Voltage', factor: 1e-3 },
+  uV: { group: 'Voltage', factor: 1e-6 },
   kV: { group: 'Voltage', factor: 1e3 },
   A: { group: 'Current', factor: 1 },
   mA: { group: 'Current', factor: 1e-3 },
   uA: { group: 'Current', factor: 1e-6 },
+  nA: { group: 'Current', factor: 1e-9 },
+  'mΩ': { group: 'Resistance', factor: 1e-3 },
   'Ω': { group: 'Resistance', factor: 1 },
   'kΩ': { group: 'Resistance', factor: 1e3 },
   'MΩ': { group: 'Resistance', factor: 1e6 },
-  W: { group: 'Power', factor: 1 },
+  uW: { group: 'Power', factor: 1e-6 },
   mW: { group: 'Power', factor: 1e-3 },
+  W: { group: 'Power', factor: 1 },
+  kW: { group: 'Power', factor: 1e3 },
+  Hz: { group: 'Frequency', factor: 1 },
+  kHz: { group: 'Frequency', factor: 1e3 },
+  MHz: { group: 'Frequency', factor: 1e6 },
+  GHz: { group: 'Frequency', factor: 1e9 },
+  s: { group: 'Time', factor: 1 },
+  ms: { group: 'Time', factor: 1e-3 },
+  'us': { group: 'Time', factor: 1e-6 },
+  ns: { group: 'Time', factor: 1e-9 },
+  H: { group: 'Inductance', factor: 1 },
+  mH: { group: 'Inductance', factor: 1e-3 },
+  'uH': { group: 'Inductance', factor: 1e-6 },
+  nH: { group: 'Inductance', factor: 1e-9 },
+  F: { group: 'Capacitance', factor: 1 },
+  mF: { group: 'Capacitance', factor: 1e-3 },
+  'uF': { group: 'Capacitance', factor: 1e-6 },
+  nF: { group: 'Capacitance', factor: 1e-9 },
+  pF: { group: 'Capacitance', factor: 1e-12 },
+  C: { group: 'Charge', factor: 1 },
+  mC: { group: 'Charge', factor: 1e-3 },
+  uC: { group: 'Charge', factor: 1e-6 },
+  nC: { group: 'Charge', factor: 1e-9 },
+  J: { group: 'Energy', factor: 1 },
+  mJ: { group: 'Energy', factor: 1e-3 },
+  uJ: { group: 'Energy', factor: 1e-6 },
 }
 
 export function formatEngineeringValue(value) {
@@ -35,61 +64,187 @@ export function formatEngineeringValue(value) {
   return Number(value.toPrecision(6)).toString()
 }
 
+export function solveCoreEE(target, values) {
+  const parsed = Object.fromEntries(
+    Object.entries(values).map(([key, value]) => [key, parseOptionalNumber(value)]),
+  )
+  const supplied = Object.entries(parsed).filter(([, value]) => value !== null)
+  if (!['voltage', 'current', 'resistance', 'power'].includes(target) || supplied.length !== 2) return null
+
+  const known = Object.fromEntries(supplied)
+  const has = (...keys) => keys.every(key => known[key] !== undefined)
+
+  if (target === 'resistance' && has('voltage', 'current') && known.current !== 0) {
+    return { label: 'Resistance', value: known.voltage / known.current, unit: 'Ω' }
+  }
+  if (target === 'resistance' && has('voltage', 'power') && known.power !== 0) {
+    return { label: 'Resistance', value: (known.voltage ** 2) / known.power, unit: 'Ω' }
+  }
+  if (target === 'resistance' && has('current', 'power') && known.current !== 0) {
+    return { label: 'Resistance', value: known.power / (known.current ** 2), unit: 'Ω' }
+  }
+
+  if (target === 'current' && has('voltage', 'resistance') && known.resistance !== 0) {
+    return { label: 'Current', value: known.voltage / known.resistance, unit: 'A' }
+  }
+  if (target === 'current' && has('voltage', 'power') && known.voltage !== 0) {
+    return { label: 'Current', value: known.power / known.voltage, unit: 'A' }
+  }
+  if (target === 'current' && has('power', 'resistance') && known.resistance > 0 && known.power >= 0) {
+    return { label: 'Current (magnitude)', value: Math.sqrt(known.power / known.resistance), unit: 'A' }
+  }
+
+  if (target === 'voltage' && has('current', 'resistance')) {
+    return { label: 'Voltage', value: known.current * known.resistance, unit: 'V' }
+  }
+  if (target === 'voltage' && has('current', 'power') && known.current !== 0) {
+    return { label: 'Voltage', value: known.power / known.current, unit: 'V' }
+  }
+  if (target === 'voltage' && has('resistance', 'power') && known.resistance > 0 && known.power >= 0) {
+    return { label: 'Voltage (magnitude)', value: Math.sqrt(known.power * known.resistance), unit: 'V' }
+  }
+
+  if (target === 'power' && has('voltage', 'current')) {
+    return { label: 'Power', value: known.voltage * known.current, unit: 'W' }
+  }
+  if (target === 'power' && has('voltage', 'resistance') && known.resistance !== 0) {
+    return { label: 'Power', value: (known.voltage ** 2) / known.resistance, unit: 'W' }
+  }
+  if (target === 'power' && has('current', 'resistance')) {
+    return { label: 'Power', value: (known.current ** 2) * known.resistance, unit: 'W' }
+  }
+
+  return null
+}
+
 export function solveOhmsLaw({ voltage, current, resistance, power }) {
-  const values = {
-    voltage: parseOptionalNumber(voltage),
-    current: parseOptionalNumber(current),
-    resistance: parseOptionalNumber(resistance),
-    power: parseOptionalNumber(power),
-  }
-  const supplied = Object.entries(values).filter(([, value]) => value !== null)
+  const values = { voltage, current, resistance, power }
+  const parsed = Object.fromEntries(Object.entries(values).map(([key, value]) => [key, parseOptionalNumber(value)]))
+  const supplied = Object.entries(parsed).filter(([, value]) => value !== null)
   if (supplied.length !== 2) return null
-
   const [first, second] = supplied
-  const a = first[1]
-  const b = second[1]
+  const target = ['voltage', 'current', 'resistance', 'power'].find(key => key !== first[0] && key !== second[0])
+  const candidates = ['resistance', 'current', 'voltage', 'power'].map(key => key).filter(key => {
+    const clone = { ...values, [key]: undefined }
+    return key !== first[0] && key !== second[0] && clone[key] === undefined
+  })
+  if (candidates.length === 0) return null
+  const inferred = inferOhmsTarget(first[0], second[0])
+  return inferred ? solveCoreEE(inferred, values) : (target ? solveCoreEE(target, values) : null)
+}
 
-  if ((first[0] === 'voltage' && second[0] === 'current') || (first[0] === 'current' && second[0] === 'voltage')) {
-    const v = first[0] === 'voltage' ? a : b
-    const i = first[0] === 'current' ? a : b
-    if (i === 0) return null
-    return { label: 'Resistance', value: v / i, unit: 'Ω' }
+function inferOhmsTarget(a, b) {
+  const pair = [a, b].sort().join('+')
+  const map = {
+    'current+voltage': 'resistance',
+    'resistance+voltage': 'current',
+    'current+resistance': 'voltage',
+    'power+voltage': 'current',
+    'current+power': 'voltage',
+    'power+resistance': 'current',
   }
+  return map[pair] || null
+}
 
-  if ((first[0] === 'voltage' && second[0] === 'resistance') || (first[0] === 'resistance' && second[0] === 'voltage')) {
-    const v = first[0] === 'voltage' ? a : b
-    const r = first[0] === 'resistance' ? a : b
-    if (r === 0) return null
-    return { label: 'Current', value: v / r, unit: 'A' }
+export function solveInductor(target, values) {
+  const parsed = Object.fromEntries(
+    Object.entries(values).map(([key, value]) => [key, parseOptionalNumber(value)]),
+  )
+  const supplied = Object.entries(parsed).filter(([, value]) => value !== null)
+  if (!['inductance', 'voltage', 'rate', 'current', 'energy', 'reactance', 'frequency'].includes(target) || supplied.length !== 2) return null
+  const known = Object.fromEntries(supplied)
+  const has = (...keys) => keys.every(key => known[key] !== undefined)
+  const twoPi = 2 * Math.PI
+
+  if (target === 'inductance' && has('voltage', 'rate') && known.rate !== 0) {
+    return { label: 'Inductance', value: known.voltage / known.rate, unit: 'H' }
   }
-
-  if ((first[0] === 'current' && second[0] === 'resistance') || (first[0] === 'resistance' && second[0] === 'current')) {
-    const i = first[0] === 'current' ? a : b
-    const r = first[0] === 'resistance' ? a : b
-    return { label: 'Voltage', value: i * r, unit: 'V' }
+  if (target === 'inductance' && has('reactance', 'frequency') && known.frequency > 0) {
+    return { label: 'Inductance', value: known.reactance / (twoPi * known.frequency), unit: 'H' }
   }
-
-  if ((first[0] === 'voltage' && second[0] === 'power') || (first[0] === 'power' && second[0] === 'voltage')) {
-    const v = first[0] === 'voltage' ? a : b
-    const p = first[0] === 'power' ? a : b
-    if (v === 0) return null
-    return { label: 'Current', value: p / v, unit: 'A' }
+  if (target === 'inductance' && has('energy', 'current') && known.current !== 0 && known.energy >= 0) {
+    return { label: 'Inductance', value: (2 * known.energy) / (known.current ** 2), unit: 'H' }
   }
-
-  if ((first[0] === 'current' && second[0] === 'power') || (first[0] === 'power' && second[0] === 'current')) {
-    const i = first[0] === 'current' ? a : b
-    const p = first[0] === 'power' ? a : b
-    if (i === 0) return null
-    return { label: 'Voltage', value: p / i, unit: 'V' }
+  if (target === 'voltage' && has('inductance', 'rate')) {
+    return { label: 'Voltage', value: known.inductance * known.rate, unit: 'V' }
   }
-
-  if ((first[0] === 'power' && second[0] === 'resistance') || (first[0] === 'resistance' && second[0] === 'power')) {
-    const p = first[0] === 'power' ? a : b
-    const r = first[0] === 'resistance' ? a : b
-    if (r <= 0 || p < 0) return null
-    return { label: 'Current', value: Math.sqrt(p / r), unit: 'A' }
+  if (target === 'rate' && has('voltage', 'inductance') && known.inductance !== 0) {
+    return { label: 'Rate of Current Change', value: known.voltage / known.inductance, unit: 'A/s' }
   }
+  if (target === 'current' && has('energy', 'inductance') && known.inductance > 0 && known.energy >= 0) {
+    return { label: 'Current (magnitude)', value: Math.sqrt((2 * known.energy) / known.inductance), unit: 'A' }
+  }
+  if (target === 'energy' && has('inductance', 'current') && known.inductance >= 0) {
+    return { label: 'Stored Energy', value: 0.5 * known.inductance * known.current ** 2, unit: 'J' }
+  }
+  if (target === 'reactance' && has('frequency', 'inductance')) {
+    return { label: 'Inductive Reactance', value: twoPi * known.frequency * known.inductance, unit: 'Ω' }
+  }
+  if (target === 'frequency' && has('reactance', 'inductance') && known.inductance !== 0) {
+    return { label: 'Frequency', value: known.reactance / (twoPi * known.inductance), unit: 'Hz' }
+  }
+  return null
+}
 
+export function solveCapacitor(target, values) {
+  const parsed = Object.fromEntries(
+    Object.entries(values).map(([key, value]) => [key, parseOptionalNumber(value)]),
+  )
+  const supplied = Object.entries(parsed).filter(([, value]) => value !== null)
+  if (!['capacitance', 'charge', 'voltage', 'energy', 'reactance', 'frequency', 'current', 'rate'].includes(target) || supplied.length !== 2) return null
+  const known = Object.fromEntries(supplied)
+  const has = (...keys) => keys.every(key => known[key] !== undefined)
+  const twoPi = 2 * Math.PI
+
+  if (target === 'capacitance' && has('charge', 'voltage') && known.voltage !== 0) {
+    return { label: 'Capacitance', value: known.charge / known.voltage, unit: 'F' }
+  }
+  if (target === 'capacitance' && has('energy', 'voltage') && known.voltage !== 0 && known.energy >= 0) {
+    return { label: 'Capacitance', value: (2 * known.energy) / (known.voltage ** 2), unit: 'F' }
+  }
+  if (target === 'capacitance' && has('reactance', 'frequency') && known.reactance !== 0 && known.frequency > 0) {
+    return { label: 'Capacitance', value: 1 / (twoPi * known.frequency * known.reactance), unit: 'F' }
+  }
+  if (target === 'voltage' && has('charge', 'capacitance') && known.capacitance !== 0) {
+    return { label: 'Voltage', value: known.charge / known.capacitance, unit: 'V' }
+  }
+  if (target === 'voltage' && has('energy', 'capacitance') && known.capacitance > 0 && known.energy >= 0) {
+    return { label: 'Voltage (magnitude)', value: Math.sqrt((2 * known.energy) / known.capacitance), unit: 'V' }
+  }
+  if (target === 'charge' && has('capacitance', 'voltage')) {
+    return { label: 'Charge', value: known.capacitance * known.voltage, unit: 'C' }
+  }
+  if (target === 'energy' && has('capacitance', 'voltage') && known.capacitance >= 0) {
+    return { label: 'Stored Energy', value: 0.5 * known.capacitance * known.voltage ** 2, unit: 'J' }
+  }
+  if (target === 'reactance' && has('frequency', 'capacitance') && known.frequency > 0 && known.capacitance !== 0) {
+    return { label: 'Capacitive Reactance', value: 1 / (twoPi * known.frequency * known.capacitance), unit: 'Ω' }
+  }
+  if (target === 'frequency' && has('reactance', 'capacitance') && known.reactance !== 0 && known.capacitance !== 0) {
+    return { label: 'Frequency', value: 1 / (twoPi * known.reactance * known.capacitance), unit: 'Hz' }
+  }
+  if (target === 'current' && has('capacitance', 'rate')) {
+    return { label: 'Current', value: known.capacitance * known.rate, unit: 'A' }
+  }
+  if (target === 'rate' && has('current', 'capacitance') && known.capacitance !== 0) {
+    return { label: 'Rate of Voltage Change', value: known.current / known.capacitance, unit: 'V/s' }
+  }
+  return null
+}
+
+export function solveFrequencyPeriod(target, values) {
+  const parsed = Object.fromEntries(
+    Object.entries(values).map(([key, value]) => [key, parseOptionalNumber(value)]),
+  )
+  if (!['frequency', 'period'].includes(target)) return null
+  const period = parsed.period ?? null
+  const frequency = parsed.frequency ?? null
+  if (target === 'frequency' && period !== null && period > 0 && frequency === null) {
+    return { label: 'Frequency', value: 1 / period, unit: 'Hz' }
+  }
+  if (target === 'period' && frequency !== null && frequency > 0 && period === null) {
+    return { label: 'Period', value: 1 / frequency, unit: 's' }
+  }
   return null
 }
 

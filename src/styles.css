@@ -268,3 +268,15 @@ input[type="number"]{color-scheme:dark}.app-shell{min-height:100vh;background:ra
 
 .question-actions{display:flex;align-items:center;gap:4px;justify-content:flex-end}.compact-button{font:8px monospace;letter-spacing:.08em;padding:6px 8px}@media(max-width:760px){.question-row{grid-template-columns:1fr auto}.question-actions{grid-column:1/-1;justify-content:flex-start}}
 .not-found{max-width:720px;margin:40px auto;padding:28px;text-align:center}.not-found h1{font:56px monospace;color:var(--cyan);margin:8px 0}.not-found p{color:#778ba6;font-size:11px;line-height:1.7}.not-found>div{display:flex;justify-content:center;gap:8px;margin-top:18px}.not-found a{text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+
+
+/* Expanded Engineering Tools */
+.tool-card-wide{grid-column:1/-1}
+.tool-selector-row{display:grid;grid-template-columns:minmax(180px,.7fr) minmax(250px,1fr);gap:8px;margin-bottom:9px}
+.tool-selector-row label{display:block}
+.tool-selector-row label>span{display:block;font:8px monospace;letter-spacing:.08em;color:#61758f;text-transform:uppercase;margin-bottom:5px}
+.tool-two-inputs{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tool-selector-row input,.tool-selector-row select{width:100%;border:1px solid var(--line);outline:none;background:rgba(255,255,255,.025);color:var(--text);padding:9px;font:10px inherit}
+.tool-selector-row input:focus,.tool-selector-row select:focus{border-color:rgba(76,230,255,.45);box-shadow:0 12px 28px rgba(76,230,255,.05)}
+@media(max-width:900px){.tool-card-wide{grid-column:auto}.tool-selector-row{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.tool-selector-row{grid-template-columns:1fr}}
